@@ -106,16 +106,6 @@
             will-change: transform;
         }
 
-        /* Evil Heart Popup Animation */
-        @keyframes pulseAlert {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px #ef4444); }
-            50% { transform: scale(1.25); filter: drop-shadow(0 0 18px #f43f5e); }
-        }
-
-        .evil-heart-alert {
-            animation: pulseAlert 0.4s infinite ease-in-out;
-        }
-
         canvas {
             image-rendering: pixelated;
         }
@@ -184,7 +174,7 @@
                     </div>
                     <h1 class="text-2xl font-extrabold text-white mb-2 tracking-tight">Arcade Quest</h1>
                     <p class="text-xs text-slate-400 max-w-[260px] leading-relaxed mb-6">
-                        Beat 6 retro games. Watch out for the <span class="text-red-400 font-bold">Evil Heart</span> popups & tilt your phone left/right after each win!
+                        Play 6 fun arcade classics! Tap in-game <span class="text-red-400 font-bold">Evil Hearts</span> live during gameplay & tilt your phone left/right after each win to choose rewards.
                     </p>
 
                     <div class="ios-glass p-3 rounded-2xl w-full max-w-[280px] mb-6 flex items-center space-x-3 text-left">
@@ -192,14 +182,14 @@
                             🖤
                         </div>
                         <div>
-                            <div class="text-xs font-bold text-white">Evil Heart Event</div>
-                            <div class="text-[10px] text-slate-400">Tap the spawned heart within 2s or lose!</div>
+                            <div class="text-xs font-bold text-white">Live Evil Heart Hazards</div>
+                            <div class="text-[10px] text-slate-400">Tap the heart in real-time as it chases you!</div>
                         </div>
                     </div>
                 </div>
 
                 <button onclick="startArcadeJourney()" class="w-full max-w-[280px] py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm shadow-lg hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-2">
-                    <span>Play Arcade</span>
+                    <span>Start Arcade</span>
                     <i class="fa-solid fa-play text-xs"></i>
                 </button>
             </div>
@@ -264,7 +254,7 @@
                     </div>
                     <h1 class="text-2xl font-extrabold text-white mb-1">Arcade Master!</h1>
                     <p class="text-xs text-slate-400 max-w-[260px] mb-6">
-                        You conquered all 6 games and neutralized all Evil Hearts!
+                        You conquered all 6 games and neutralized every Evil Heart!
                     </p>
 
                     <button onclick="showGrandTrophyModal()" class="w-full max-w-[280px] p-4 rounded-2xl bg-gradient-to-r from-amber-500 to-emerald-500 text-slate-950 font-black text-sm shadow-xl mb-3 flex items-center justify-between active:scale-95 transition">
@@ -295,17 +285,6 @@
 
         </main>
 
-        <!-- GLOBAL EVIL HEART POPUP OVERLAY -->
-        <div id="evil-heart-popup" class="absolute inset-0 bg-red-950/40 backdrop-blur-xs z-50 flex flex-col items-center justify-center hidden pointer-events-auto">
-            <div class="text-center mb-2">
-                <span class="text-xs font-pixel text-red-500 bg-black/80 px-3 py-1 rounded-full border border-red-500">EVIL HEART ALERT!</span>
-                <p class="text-[10px] text-white font-bold mt-1">TAP THE HEART IN <span id="evil-timer" class="text-yellow-400 font-mono text-xs">2.0</span>s!</p>
-            </div>
-            <button id="evil-heart-btn" onclick="defuseEvilHeart()" class="evil-heart-alert text-7xl active:scale-75 transition transform cursor-pointer filter drop-shadow-lg">
-                🖤
-            </button>
-        </div>
-
         <!-- GRAND TROPHY MODAL -->
         <div id="grand-trophy-modal" class="absolute inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-5 hidden">
             <div class="w-full max-w-[300px] ios-glass p-6 rounded-3xl border border-white/20 text-center relative flex flex-col items-center">
@@ -317,7 +296,7 @@
                 <h3 class="text-lg font-black text-white">Ultimate Champion</h3>
                 <p class="text-xs text-amber-400 font-semibold mb-3">6/6 Stages Mastered</p>
                 <div class="bg-white/5 p-3 rounded-xl text-left text-[11px] text-slate-300 mb-4 border border-white/5 leading-relaxed">
-                    Proven fast reflexes, strategic timing, and sharp tap speed under high pressure!
+                    Proven fast reflexes, sharp timing, and skilled play under live heart hazards!
                 </div>
                 <button onclick="triggerConfetti(); closeGrandTrophyModal();" class="w-full py-2.5 rounded-xl bg-amber-400 text-slate-950 font-black text-xs shadow-lg">
                     🎉 Celebrate Victory!
@@ -415,11 +394,6 @@
         let gyroGamma = 0;
         let tiltSelectionLocked = false;
         let activeInterval = null;
-
-        // Evil Heart Logic
-        let evilHeartTimer = null;
-        let evilCountdownInterval = null;
-        let evilTimeRemaining = 2.0;
 
         const rewardsData = [
             {
@@ -537,38 +511,6 @@
             }, 400);
         }
 
-        function triggerEvilHeartEvent(onFailCallback) {
-            hideEvilHeart();
-            evilTimeRemaining = 2.0;
-            document.getElementById('evil-timer').innerText = '2.0';
-            document.getElementById('evil-heart-popup').classList.remove('hidden');
-            playSound('fail');
-
-            evilCountdownInterval = setInterval(() => {
-                evilTimeRemaining -= 0.1;
-                document.getElementById('evil-timer').innerText = Math.max(0, evilTimeRemaining).toFixed(1);
-            }, 100);
-
-            evilHeartTimer = setTimeout(() => {
-                hideEvilHeart();
-                playSound('boom');
-                if (onFailCallback) onFailCallback();
-            }, 2000);
-        }
-
-        function defuseEvilHeart() {
-            playSound('score');
-            hideEvilHeart();
-        }
-
-        function hideEvilHeart() {
-            if (evilHeartTimer) clearTimeout(evilHeartTimer);
-            if (evilCountdownInterval) clearInterval(evilCountdownInterval);
-            evilHeartTimer = null;
-            evilCountdownInterval = null;
-            document.getElementById('evil-heart-popup').classList.add('hidden');
-        }
-
         function startArcadeJourney() {
             playSound('tap');
             document.getElementById('home-screen').classList.add('hidden');
@@ -588,7 +530,6 @@
         }
 
         function clearActiveGame() {
-            hideEvilHeart();
             if (activeInterval) {
                 clearInterval(activeInterval);
                 activeInterval = null;
@@ -689,7 +630,7 @@
 
 
         // ==========================================
-        // GAME 1: FLAPPY BIRD REPLICA
+        // GAME 1: FLAPPY BIRD REPLICA (LIVE EVIL HEART IN-GAME)
         // ==========================================
         function renderGame1_FlappyBird() {
             const container = document.getElementById('game-screen');
@@ -698,7 +639,7 @@
                     <div class="w-full flex items-center justify-between px-2">
                         <div>
                             <h2 class="text-xs font-pixel text-yellow-400">FLAPPY BIRD</h2>
-                            <p class="text-[9px] text-slate-300">Target: Reach 5 Points</p>
+                            <p class="text-[9px] text-slate-300">Tap bird to jump | Tap 🖤 to dispel!</p>
                         </div>
                         <button onclick="renderGame1_FlappyBird()" class="px-3 py-1 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
                             <i class="fa-solid fa-rotate-right text-[9px]"></i>
@@ -706,51 +647,75 @@
                         </button>
                     </div>
 
-                    <div class="relative w-full max-w-[290px] h-[380px] bg-cyan-300 rounded-2xl overflow-hidden border-2 border-slate-700 shadow-2xl cursor-pointer">
+                    <div class="relative w-full max-w-[290px] h-[380px] bg-cyan-300 rounded-2xl overflow-hidden border-2 border-slate-700 shadow-2xl">
                         <canvas id="flappy-canvas" width="290" height="380" class="w-full h-full"></canvas>
                         <div class="absolute top-2 left-1/2 -translate-x-1/2 bg-slate-900/80 px-3 py-0.5 rounded-full border border-white/20 text-white font-pixel text-[10px]">
-                            SCORE: <span id="flappy-score" class="text-yellow-400">0</span>/5
+                            SCORE: <span id="flappy-score" class="text-yellow-400">0</span>/4
                         </div>
                     </div>
 
-                    <div class="text-[10px] text-slate-400 font-medium">Tap canvas to Flap</div>
+                    <div class="text-[10px] text-slate-400 font-medium">Tap canvas to Flap | Tap Evil Heart to banish!</div>
                 </div>
             `;
 
             const canvas = document.getElementById('flappy-canvas');
             const ctx = canvas.getContext('2d');
-            let birdY = 180, velocity = 0, gravity = 0.38, jump = -6.0;
+            let birdY = 180, velocity = 0, gravity = 0.28, jump = -5.2; // Easier gravity & jump
             let pipes = [], score = 0, frame = 0;
-            let evilHeartSpawned = false;
 
-            function flap() {
+            // In-Game Live Evil Heart Entity
+            let heart = {
+                active: false,
+                x: -30,
+                y: 180,
+                radius: 16
+            };
+
+            canvas.addEventListener('pointerdown', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const clickY = e.clientY - rect.top;
+
+                // Check if user tapped the Evil Heart directly
+                if (heart.active) {
+                    const dist = Math.hypot(clickX - heart.x, clickY - heart.y);
+                    if (dist < heart.radius + 14) {
+                        heart.active = false;
+                        playSound('score');
+                        return; // Prevent flap when successfully tapping heart
+                    }
+                }
+
+                // Normal flap
                 playSound('tap');
                 velocity = jump;
-            }
-            canvas.parentElement.addEventListener('pointerdown', flap);
+            });
 
             activeInterval = setInterval(() => {
                 frame++;
                 velocity += gravity;
                 birdY += velocity;
 
-                // Evil Heart Trigger at score 2
-                if (score === 2 && !evilHeartSpawned) {
-                    evilHeartSpawned = true;
-                    triggerEvilHeartEvent(() => renderGame1_FlappyBird());
+                // Spawn Evil Heart at score 1 following bird
+                if (score >= 1 && !heart.active && frame % 180 === 0) {
+                    heart.active = true;
+                    heart.x = 10;
+                    heart.y = birdY;
                 }
 
-                if (frame % 85 === 0) {
-                    const gap = 100;
-                    const topH = Math.floor(Math.random() * (canvas.height - gap - 100)) + 30;
+                // Move pipes with wider gaps
+                if (frame % 100 === 0) {
+                    const gap = 120; // Extra wide gap for lower difficulty
+                    const topH = Math.floor(Math.random() * (canvas.height - gap - 120)) + 40;
                     pipes.push({ x: canvas.width, topH, gap, passed: false });
                 }
 
+                // Draw background
                 ctx.fillStyle = '#70c5ce';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 pipes.forEach(p => {
-                    p.x -= 2;
+                    p.x -= 1.8;
 
                     ctx.fillStyle = '#73bf2e';
                     ctx.fillRect(p.x, 0, 44, p.topH);
@@ -768,12 +733,12 @@
                         score++;
                         playSound('score');
                         document.getElementById('flappy-score').innerText = score;
-                        if (score >= 5) onGameWin();
+                        if (score >= 4) onGameWin();
                     }
 
                     if (
-                        (60 + 12 > p.x && 60 - 12 < p.x + 44) &&
-                        (birdY - 10 < p.topH || birdY + 10 > p.topH + p.gap)
+                        (60 + 10 > p.x && 60 - 10 < p.x + 44) &&
+                        (birdY - 8 < p.topH || birdY + 8 > p.topH + p.gap)
                     ) {
                         playSound('fail');
                         renderGame1_FlappyBird();
@@ -786,7 +751,23 @@
                 ctx.fillStyle = '#73bf2e';
                 ctx.fillRect(0, canvas.height - 35, canvas.width, 6);
 
-                // Bird
+                // Update & Render Evil Heart Chaser
+                if (heart.active) {
+                    heart.x += (60 - heart.x) * 0.03; // Smoothly creep behind bird
+                    heart.y += (birdY - heart.y) * 0.05;
+
+                    ctx.font = '22px serif';
+                    ctx.fillText('🖤', heart.x - 11, heart.y + 8);
+
+                    // Touch bird collision check
+                    if (Math.hypot(heart.x - 60, heart.y - birdY) < 18) {
+                        playSound('fail');
+                        renderGame1_FlappyBird();
+                        return;
+                    }
+                }
+
+                // Render Bird
                 ctx.save();
                 ctx.translate(60, birdY);
                 ctx.rotate(Math.min(Math.PI / 4, Math.max(-Math.PI / 4, velocity * 0.08)));
@@ -821,7 +802,7 @@
 
 
         // ==========================================
-        // GAME 2: 2048 PUZZLE
+        // GAME 2: 2048 PUZZLE (INTEGRATED EVIL HEART TILE)
         // ==========================================
         function renderGame2_2048() {
             const container = document.getElementById('game-screen');
@@ -830,7 +811,7 @@
                     <div class="w-full flex items-center justify-between px-2">
                         <div>
                             <h2 class="text-xs font-bold text-amber-400">2048 PUZZLE</h2>
-                            <p class="text-[9px] text-slate-300">Merge to 128 Tile</p>
+                            <p class="text-[9px] text-slate-300">Merge to 64 | Tap 🖤 tiles to clear!</p>
                         </div>
                         <button onclick="renderGame2_2048()" class="px-3 py-1 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
                             <i class="fa-solid fa-rotate-right text-[9px]"></i>
@@ -854,7 +835,6 @@
 
             let board = Array(4).fill(null).map(() => Array(4).fill(0));
             let moveCount = 0;
-            let evilHeartSpawned = false;
 
             function spawnTile() {
                 let empty = [];
@@ -865,7 +845,12 @@
                 }
                 if (empty.length > 0) {
                     let spot = empty[Math.floor(Math.random() * empty.length)];
-                    board[spot.r][spot.c] = Math.random() < 0.9 ? 2 : 4;
+                    // Spawn Evil Heart tile ('HEART') every 6 moves
+                    if (moveCount > 0 && moveCount % 6 === 0 && !board.some(row => row.includes('HEART'))) {
+                        board[spot.r][spot.c] = 'HEART';
+                    } else {
+                        board[spot.r][spot.c] = Math.random() < 0.8 ? 2 : 4;
+                    }
                 }
             }
 
@@ -876,8 +861,7 @@
                 8: 'bg-orange-400 text-white font-bold text-base',
                 16: 'bg-orange-500 text-white font-bold text-base',
                 32: 'bg-rose-500 text-white font-bold text-base',
-                64: 'bg-red-600 text-white font-bold text-base',
-                128: 'bg-yellow-400 text-slate-900 font-extrabold text-lg shadow-lg'
+                64: 'bg-yellow-400 text-slate-900 font-extrabold text-lg shadow-lg shadow-yellow-500/30'
             };
 
             function draw2048() {
@@ -889,11 +873,23 @@
                     for (let c = 0; c < 4; c++) {
                         const val = board[r][c];
                         const tile = document.createElement('div');
-                        tile.className = `rounded-xl flex items-center justify-center transition-all ${tileColors[val] || 'bg-yellow-400 text-white font-bold text-base'}`;
-                        tile.innerText = val > 0 ? val : '';
+                        
+                        if (val === 'HEART') {
+                            tile.className = 'rounded-xl flex items-center justify-center bg-red-900 border-2 border-red-500 text-xl cursor-pointer animate-pulse';
+                            tile.innerText = '🖤';
+                            tile.onclick = () => {
+                                playSound('score');
+                                board[r][c] = 0;
+                                draw2048();
+                            };
+                        } else {
+                            tile.className = `rounded-xl flex items-center justify-center transition-all ${tileColors[val] || 'bg-yellow-400 text-slate-900 font-bold text-base'}`;
+                            tile.innerText = val > 0 ? val : '';
+                        }
+                        
                         gridEl.appendChild(tile);
 
-                        if (val >= 128) {
+                        if (typeof val === 'number' && val >= 64) { // Target lowered to 64 for easier win
                             setTimeout(() => onGameWin(), 200);
                         }
                     }
@@ -905,21 +901,16 @@
                 let moved = false;
                 moveCount++;
 
-                if (moveCount === 5 && !evilHeartSpawned) {
-                    evilHeartSpawned = true;
-                    triggerEvilHeartEvent(() => renderGame2_2048());
-                }
-
                 function slide(row) {
-                    let arr = row.filter(val => val);
+                    let arr = row.filter(val => val !== 0);
                     for (let i = 0; i < arr.length - 1; i++) {
-                        if (arr[i] === arr[i + 1]) {
+                        if (typeof arr[i] === 'number' && arr[i] === arr[i + 1]) {
                             arr[i] *= 2;
                             playSound('score');
                             arr[i + 1] = 0;
                         }
                     }
-                    arr = arr.filter(val => val);
+                    arr = arr.filter(val => val !== 0);
                     while (arr.length < 4) arr.push(0);
                     return arr;
                 }
@@ -958,7 +949,7 @@
 
 
         // ==========================================
-        // GAME 3: TETRIS REPLICA
+        // GAME 3: TETRIS REPLICA (FALLING EVIL HEART BLOCK)
         // ==========================================
         function renderGame3_Tetris() {
             const container = document.getElementById('game-screen');
@@ -967,7 +958,7 @@
                     <div class="w-full flex items-center justify-between px-2">
                         <div>
                             <h2 class="text-xs font-pixel text-cyan-400">TETRIS</h2>
-                            <p class="text-[9px] text-slate-300">Clear 2 Lines</p>
+                            <p class="text-[9px] text-slate-300">Clear 1 Line | Tap 🖤 block to clear!</p>
                         </div>
                         <button onclick="renderGame3_Tetris()" class="px-3 py-1 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
                             <i class="fa-solid fa-rotate-right text-[9px]"></i>
@@ -976,14 +967,14 @@
                     </div>
 
                     <div class="relative flex space-x-2 items-center">
-                        <div class="w-[180px] h-[300px] bg-slate-950 rounded-xl border-2 border-slate-700 overflow-hidden shadow-2xl">
+                        <div class="w-[180px] h-[300px] bg-slate-950 rounded-xl border-2 border-slate-700 overflow-hidden shadow-2xl relative">
                             <canvas id="tetris-canvas" width="180" height="300" class="w-full h-full"></canvas>
                         </div>
 
                         <div class="flex flex-col space-y-2 text-xs">
                             <div class="ios-glass p-2 rounded-xl text-center">
                                 <div class="text-[8px] text-slate-400">LINES</div>
-                                <div id="tetris-lines" class="font-pixel text-yellow-400 text-xs">0/2</div>
+                                <div id="tetris-lines" class="font-pixel text-yellow-400 text-xs">0/1</div>
                             </div>
                         </div>
                     </div>
@@ -999,22 +990,41 @@
 
             const canvas = document.getElementById('tetris-canvas');
             const ctx = canvas.getContext('2d');
-            const cols = 10, rows = 20, blockSize = 15;
+            const cols = 10, rows = 20, blockSize = 18;
             let board = Array(rows).fill(null).map(() => Array(cols).fill(0));
             let linesCleared = 0;
-            let evilHeartSpawned = false;
 
             const shapes = [
-                [[1, 1, 1, 1]], [[1, 1, 1], [0, 1, 0]], [[1, 1, 0], [0, 1, 1]],
-                [[0, 1, 1], [1, 1, 0]], [[1, 1], [1, 1]], [[1, 0, 0], [1, 1, 1]]
+                [[1, 1, 1, 1]], [[1, 1, 1], [0, 1, 0]], [[1, 1], [1, 1]], [[1, 1, 0], [0, 1, 1]]
             ];
-            const colors = ['#06b6d4', '#a855f7', '#ef4444', '#10b981', '#eab308', '#3b82f6'];
+            const colors = ['#06b6d4', '#a855f7', '#eab308', '#ef4444'];
 
             let current = spawnPiece();
 
+            canvas.addEventListener('pointerdown', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const clickY = e.clientY - rect.top;
+
+                // Tap Evil Heart block to destroy it
+                if (current && current.isHeart) {
+                    const px = current.x * blockSize;
+                    const py = current.y * blockSize;
+                    if (clickX >= px && clickX <= px + blockSize && clickY >= py && clickY <= py + blockSize) {
+                        playSound('score');
+                        current = spawnPiece();
+                        drawTetris();
+                    }
+                }
+            });
+
             function spawnPiece() {
+                // 20% chance to spawn an Evil Heart block
+                if (Math.random() < 0.25) {
+                    return { shape: [[1]], color: '#ef4444', isHeart: true, x: 4, y: 0 };
+                }
                 const idx = Math.floor(Math.random() * shapes.length);
-                return { shape: shapes[idx], color: colors[idx], x: 3, y: 0 };
+                return { shape: shapes[idx], color: colors[idx], isHeart: false, x: 3, y: 0 };
             }
 
             function validMove(piece, offX, offY, newShape) {
@@ -1045,20 +1055,14 @@
                     });
                 });
 
-                if (current.y > 6 && !evilHeartSpawned) {
-                    evilHeartSpawned = true;
-                    triggerEvilHeartEvent(() => renderGame3_Tetris());
-                }
-
                 for (let r = rows - 1; r >= 0; r--) {
                     if (board[r].every(cell => cell !== 0)) {
                         board.splice(r, 1);
                         board.unshift(Array(cols).fill(0));
                         linesCleared++;
                         playSound('score');
-                        document.getElementById('tetris-lines').innerText = `${linesCleared}/2`;
-                        r++;
-                        if (linesCleared >= 2) {
+                        document.getElementById('tetris-lines').innerText = `${linesCleared}/1`;
+                        if (linesCleared >= 1) {
                             onGameWin();
                             return;
                         }
@@ -1096,14 +1100,19 @@
                 }
 
                 if (current) {
-                    ctx.fillStyle = current.color;
-                    current.shape.forEach((row, r) => {
-                        row.forEach((val, c) => {
-                            if (val) {
-                                ctx.fillRect((current.x + c) * blockSize, (current.y + r) * blockSize, blockSize - 1, blockSize - 1);
-                            }
+                    if (current.isHeart) {
+                        ctx.font = '14px serif';
+                        ctx.fillText('🖤', current.x * blockSize + 1, (current.y + 1) * blockSize - 2);
+                    } else {
+                        ctx.fillStyle = current.color;
+                        current.shape.forEach((row, r) => {
+                            row.forEach((val, c) => {
+                                if (val) {
+                                    ctx.fillRect((current.x + c) * blockSize, (current.y + r) * blockSize, blockSize - 1, blockSize - 1);
+                                }
+                            });
                         });
-                    });
+                    }
                 }
             }
 
@@ -1114,12 +1123,12 @@
                     merge();
                 }
                 drawTetris();
-            }, 450);
+            }, 600); // Slower fall speed for easier gameplay
         }
 
 
         // ==========================================
-        // GAME 4: PAC-MAN MINI
+        // GAME 4: PAC-MAN MINI (EVIL HEART GHOST CHASER)
         // ==========================================
         function renderGame4_Pacman() {
             const container = document.getElementById('game-screen');
@@ -1128,7 +1137,7 @@
                     <div class="w-full flex items-center justify-between px-2">
                         <div>
                             <h2 class="text-xs font-pixel text-yellow-400">PAC-MAN MINI</h2>
-                            <p class="text-[9px] text-slate-300">Target: Eat 12 Dots</p>
+                            <p class="text-[9px] text-slate-300">Eat 8 Dots | Tap 🖤 chaser to stun!</p>
                         </div>
                         <button onclick="renderGame4_Pacman()" class="px-3 py-1 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
                             <i class="fa-solid fa-rotate-right text-[9px]"></i>
@@ -1139,7 +1148,7 @@
                     <div class="relative w-[270px] h-[290px] bg-black rounded-xl border-2 border-blue-600 shadow-2xl p-1">
                         <canvas id="pacman-canvas" width="270" height="290" class="w-full h-full"></canvas>
                         <div class="absolute top-2 left-2 text-[9px] font-pixel text-white">
-                            DOTS: <span id="pac-dots" class="text-yellow-400">0</span>/12
+                            DOTS: <span id="pac-dots" class="text-yellow-400">0</span>/8
                         </div>
                     </div>
 
@@ -1158,21 +1167,37 @@
             const ctx = canvas.getContext('2d');
             let pacX = 135, pacY = 180, dx = 0, dy = 0;
             let dotsEaten = 0;
-            let evilHeartSpawned = false;
+
+            let heartGhost = {
+                x: 30, y: 30,
+                stunnedTimer: 0
+            };
+
+            canvas.addEventListener('pointerdown', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const clickY = e.clientY - rect.top;
+
+                // Tap Evil Heart Ghost to stun it
+                if (Math.hypot(clickX - heartGhost.x, clickY - heartGhost.y) < 22) {
+                    heartGhost.stunnedTimer = 120; // Stun for 2 seconds
+                    playSound('score');
+                }
+            });
 
             let dots = [];
-            for (let x = 30; x < 250; x += 35) {
-                for (let y = 40; y < 260; y += 35) {
+            for (let x = 35; x < 240; x += 40) {
+                for (let y = 45; y < 250; y += 40) {
                     dots.push({ x, y, active: true });
                 }
             }
 
             window.movePac = function(dir) {
                 playSound('tap');
-                if (dir === 'up') { dx = 0; dy = -2; }
-                if (dir === 'down') { dx = 0; dy = 2; }
-                if (dir === 'left') { dx = -2; dy = 0; }
-                if (dir === 'right') { dx = 2; dy = 0; }
+                if (dir === 'up') { dx = 0; dy = -2.2; }
+                if (dir === 'down') { dx = 0; dy = 2.2; }
+                if (dir === 'left') { dx = -2.2; dy = 0; }
+                if (dir === 'right') { dx = 2.2; dy = 0; }
             };
 
             activeInterval = setInterval(() => {
@@ -1184,14 +1209,29 @@
                 if (pacY < 25) pacY = 25;
                 if (pacY > 265) pacY = 265;
 
-                if (dotsEaten === 5 && !evilHeartSpawned) {
-                    evilHeartSpawned = true;
-                    triggerEvilHeartEvent(() => renderGame4_Pacman());
-                }
-
                 ctx.fillStyle = '#000';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+                // Update & Draw Heart Ghost
+                if (heartGhost.stunnedTimer > 0) {
+                    heartGhost.stunnedTimer--;
+                    ctx.font = '20px serif';
+                    ctx.fillText('💫', heartGhost.x - 10, heartGhost.y + 7);
+                } else {
+                    heartGhost.x += (pacX - heartGhost.x) * 0.015; // Slow pursuit
+                    heartGhost.y += (pacY - heartGhost.y) * 0.015;
+
+                    ctx.font = '20px serif';
+                    ctx.fillText('🖤', heartGhost.x - 10, heartGhost.y + 7);
+
+                    if (Math.hypot(pacX - heartGhost.x, pacY - heartGhost.y) < 14) {
+                        playSound('fail');
+                        renderGame4_Pacman();
+                        return;
+                    }
+                }
+
+                // Render Dots
                 dots.forEach(d => {
                     if (d.active) {
                         ctx.fillStyle = '#ffb8ae';
@@ -1204,11 +1244,12 @@
                             dotsEaten++;
                             playSound('score');
                             document.getElementById('pac-dots').innerText = dotsEaten;
-                            if (dotsEaten >= 12) onGameWin();
+                            if (dotsEaten >= 8) onGameWin();
                         }
                     }
                 });
 
+                // Render Pac-Man
                 ctx.fillStyle = '#ffff00';
                 ctx.beginPath();
                 ctx.arc(pacX, pacY, 11, 0.2, Math.PI * 2 - 0.2);
@@ -1220,7 +1261,7 @@
 
 
         // ==========================================
-        // GAME 5: BREAKOUT
+        // GAME 5: BREAKOUT (FLOATING EVIL HEART HAZARD)
         // ==========================================
         function renderGame5_Breakout() {
             const container = document.getElementById('game-screen');
@@ -1229,7 +1270,7 @@
                     <div class="w-full flex items-center justify-between px-2">
                         <div>
                             <h2 class="text-xs font-pixel text-rose-400">BREAKOUT</h2>
-                            <p class="text-[9px] text-slate-300">Clear 8 Bricks</p>
+                            <p class="text-[9px] text-slate-300">Clear 6 Bricks | Tap 🖤 to banish!</p>
                         </div>
                         <button onclick="renderGame5_Breakout()" class="px-3 py-1 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
                             <i class="fa-solid fa-rotate-right text-[9px]"></i>
@@ -1240,7 +1281,7 @@
                     <div class="relative w-[280px] h-[330px] bg-slate-950 rounded-2xl border-2 border-slate-700 shadow-2xl overflow-hidden touch-none">
                         <canvas id="breakout-canvas" width="280" height="330" class="w-full h-full"></canvas>
                         <div class="absolute top-2 left-2 text-[9px] font-pixel text-white">
-                            BRICKS: <span id="brk-score" class="text-rose-400">0</span>/8
+                            BRICKS: <span id="brk-score" class="text-rose-400">0</span>/6
                         </div>
                     </div>
 
@@ -1251,15 +1292,27 @@
             const canvas = document.getElementById('breakout-canvas');
             const ctx = canvas.getContext('2d');
 
-            let paddleX = 100, paddleW = 75;
-            let ballX = 140, ballY = 220, dx = 2.8, dy = -2.8;
+            let paddleX = 90, paddleW = 90; // Wider paddle for easier play
+            let ballX = 140, ballY = 220, dx = 2.2, dy = -2.2; // Slower ball
             let bricksCleared = 0;
-            let evilHeartSpawned = false;
+
+            let floatingHeart = { x: 140, y: 110, active: true };
+
+            canvas.addEventListener('pointerdown', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const clickY = e.clientY - rect.top;
+
+                if (floatingHeart.active && Math.hypot(clickX - floatingHeart.x, clickY - floatingHeart.y) < 25) {
+                    floatingHeart.active = false;
+                    playSound('score');
+                }
+            });
 
             let bricks = [];
-            for (let r = 0; r < 3; r++) {
+            for (let r = 0; r < 2; r++) {
                 for (let c = 0; c < 5; c++) {
-                    bricks.push({ x: c * 52 + 10, y: r * 20 + 35, w: 46, h: 14, active: true });
+                    bricks.push({ x: c * 52 + 10, y: r * 22 + 35, w: 46, h: 16, active: true });
                 }
             }
 
@@ -1290,13 +1343,15 @@
                     return;
                 }
 
-                if (bricksCleared === 3 && !evilHeartSpawned) {
-                    evilHeartSpawned = true;
-                    triggerEvilHeartEvent(() => renderGame5_Breakout());
-                }
-
                 ctx.fillStyle = '#0f172a';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Floating Evil Heart
+                if (floatingHeart.active) {
+                    floatingHeart.x += Math.sin(Date.now() * 0.003) * 1.5;
+                    ctx.font = '22px serif';
+                    ctx.fillText('🖤', floatingHeart.x - 11, floatingHeart.y);
+                }
 
                 ctx.fillStyle = '#f43f5e';
                 ctx.fillRect(paddleX, 302, paddleW, 10);
@@ -1317,7 +1372,7 @@
                             bricksCleared++;
                             playSound('score');
                             document.getElementById('brk-score').innerText = bricksCleared;
-                            if (bricksCleared >= 8) onGameWin();
+                            if (bricksCleared >= 6) onGameWin();
                         }
                     }
                 });
@@ -1336,7 +1391,7 @@
                     <div class="w-full flex items-center justify-between px-2">
                         <div>
                             <h2 class="text-xs font-pixel text-red-500 animate-pulse">CHROME DINO CHAOS</h2>
-                            <p class="text-[9px] text-slate-300">Survive 120m!</p>
+                            <p class="text-[9px] text-slate-300">Run 100m | Tap 🖤 to banish!</p>
                         </div>
                         <button onclick="renderGame6_ChromeDinoChaos()" class="px-3 py-1 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
                             <i class="fa-solid fa-rotate-right text-[9px]"></i>
@@ -1344,57 +1399,60 @@
                         </button>
                     </div>
 
-                    <div class="relative w-[290px] h-[340px] bg-slate-900 rounded-2xl border-2 border-red-500/50 shadow-2xl overflow-hidden cursor-pointer" id="dino-area">
+                    <div class="relative w-[290px] h-[340px] bg-slate-900 rounded-2xl border-2 border-red-500/50 shadow-2xl overflow-hidden" id="dino-area">
                         <canvas id="dino-canvas" width="290" height="340" class="w-full h-full"></canvas>
                         
                         <div class="absolute top-2 left-2 bg-slate-950/90 px-2.5 py-0.5 rounded-full text-[9px] font-pixel text-emerald-400 border border-white/10">
-                            DIST: <span id="dino-score">0</span>/120m
+                            DIST: <span id="dino-score">0</span>/100m
                         </div>
                     </div>
 
-                    <div class="text-[10px] text-slate-400 font-medium">Tap screen to Jump Dino</div>
+                    <div class="text-[10px] text-slate-400 font-medium">Tap canvas to Jump Dino</div>
                 </div>
             `;
 
             const canvas = document.getElementById('dino-canvas');
             const ctx = canvas.getContext('2d');
 
-            let dinoY = 260, dinoVy = 0, gravity = 0.55, isJumping = false;
-            let distance = 0, speed = 3.5;
-            let meteors = [], cacti = [], chaserX = -35;
+            let dinoY = 260, dinoVy = 0, gravity = 0.48, isJumping = false;
+            let distance = 0, speed = 3.0;
+            let meteors = [], cacti = [];
             let slowTimer = 0;
-            let evilHeartSpawned = false;
 
-            function jump() {
+            let liveHeart = { x: 180, y: 180, active: true };
+
+            canvas.addEventListener('pointerdown', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const clickY = e.clientY - rect.top;
+
+                if (liveHeart.active && Math.hypot(clickX - liveHeart.x, clickY - liveHeart.y) < 25) {
+                    liveHeart.active = false;
+                    playSound('score');
+                    return;
+                }
+
                 if (!isJumping) {
                     playSound('tap');
-                    dinoVy = -10.2;
+                    dinoVy = -9.8;
                     isJumping = true;
                 }
-            }
-            canvas.parentElement.addEventListener('pointerdown', jump);
+            });
 
             activeInterval = setInterval(() => {
                 distance++;
                 document.getElementById('dino-score').innerText = distance;
 
-                if (distance >= 120) {
+                if (distance >= 100) {
                     onGameWin();
                     return;
                 }
 
-                if (distance === 50 && !evilHeartSpawned) {
-                    evilHeartSpawned = true;
-                    triggerEvilHeartEvent(() => renderGame6_ChromeDinoChaos());
-                }
-
                 if (slowTimer > 0) {
                     slowTimer--;
-                    speed = 1.8;
-                    chaserX += 0.6;
+                    speed = 1.6;
                 } else {
-                    speed = 3.6;
-                    chaserX = Math.max(-45, chaserX - 0.2);
+                    speed = 3.2;
                 }
 
                 dinoVy += gravity;
@@ -1404,13 +1462,13 @@
                     isJumping = false;
                 }
 
-                if (Math.random() < 0.02) {
-                    cacti.push({ x: canvas.width, w: 16, h: 28 });
+                if (Math.random() < 0.018) {
+                    cacti.push({ x: canvas.width, w: 16, h: 26 });
                 }
 
-                if (Math.random() < 0.025) {
-                    const isRed = Math.random() < 0.12;
-                    meteors.push({ x: Math.random() * canvas.width, y: -20, vy: 4.5, isRed });
+                if (Math.random() < 0.02) {
+                    const isRed = Math.random() < 0.1;
+                    meteors.push({ x: Math.random() * canvas.width, y: -20, vy: 4.0, isRed });
                 }
 
                 ctx.fillStyle = '#0f172a';
@@ -1423,17 +1481,16 @@
                 ctx.lineTo(canvas.width, 288);
                 ctx.stroke();
 
+                // Dino
                 ctx.fillStyle = '#e2e8f0';
                 ctx.fillRect(40, dinoY - 22, 18, 22);
                 ctx.fillRect(50, dinoY - 30, 10, 10);
 
-                ctx.font = '28px serif';
-                ctx.fillText('💔', chaserX, 270);
-
-                if (chaserX >= 20) {
-                    playSound('boom');
-                    renderGame6_ChromeDinoChaos();
-                    return;
+                // Live Evil Heart
+                if (liveHeart.active) {
+                    liveHeart.x += Math.sin(Date.now() * 0.002) * 1.2;
+                    ctx.font = '22px serif';
+                    ctx.fillText('🖤', liveHeart.x - 11, liveHeart.y);
                 }
 
                 for (let i = cacti.length - 1; i >= 0; i--) {
@@ -1443,7 +1500,7 @@
                     ctx.fillRect(c.x, 288 - c.h, c.w, c.h);
 
                     if (c.x < 58 && c.x + c.w > 38 && dinoY >= 288 - c.h) {
-                        slowTimer = 50;
+                        slowTimer = 40;
                     }
                 }
 
@@ -1454,13 +1511,13 @@
                     ctx.font = '18px serif';
                     ctx.fillText(m.isRed ? '☄️' : '💥', m.x, m.y);
 
-                    if (Math.hypot(m.x - 48, m.y - dinoY) < 20) {
+                    if (Math.hypot(m.x - 48, m.y - dinoY) < 18) {
                         if (m.isRed) {
                             playSound('boom');
                             renderGame6_ChromeDinoChaos();
                             return;
                         } else {
-                            slowTimer = 70;
+                            slowTimer = 50;
                             playSound('fail');
                             meteors.splice(i, 1);
                         }
