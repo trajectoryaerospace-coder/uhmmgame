@@ -97,7 +97,7 @@
         }
 
         .tilt-card {
-            transition: transform 0.1s ease-out, box-shadow 0.2s ease, opacity 0.3s ease;
+            transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, opacity 0.3s ease;
             will-change: transform;
         }
 
@@ -139,7 +139,7 @@
                 <button onclick="toggleAudio()" id="sound-btn" class="w-7 h-7 rounded-full ios-glass flex items-center justify-center text-white text-xs active:scale-90 transition">
                     <i id="sound-icon" class="fa-solid fa-volume-high"></i>
                 </button>
-                <button onclick="requestGyroPermission()" class="w-7 h-7 rounded-full ios-glass flex items-center justify-center text-blue-400 text-xs active:scale-90 transition" title="Enable Gyroscope">
+                <button onclick="requestGyroPermission(true)" id="gyro-btn" class="w-7 h-7 rounded-full ios-glass flex items-center justify-center text-blue-400 text-xs active:scale-90 transition" title="Enable Gyroscope">
                     <i class="fa-solid fa-compass"></i>
                 </button>
             </div>
@@ -194,7 +194,7 @@
                 <div class="text-center pt-2">
                     <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px] uppercase tracking-wider border border-emerald-500/30">Stage Cleared!</span>
                     <h2 class="text-lg font-bold text-white mt-1">Tilt To Choose Reward</h2>
-                    <p class="text-xs text-slate-400 mt-0.5">Tilt phone Left or Right to lock in card!</p>
+                    <p class="text-xs text-slate-400 mt-0.5">Tilt phone Left or Right (or use buttons below)!</p>
                 </div>
 
                 <div class="tilt-card-wrapper my-auto w-full flex justify-center items-center">
@@ -221,6 +221,9 @@
                 </div>
 
                 <div class="w-full flex flex-col items-center space-y-2 pb-2">
+                    <button id="enable-gyro-modal-btn" onclick="requestGyroPermission(true)" class="hidden py-1.5 px-4 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[10px] font-bold">
+                        <i class="fa-solid fa-compass mr-1"></i> Tap to Enable Gyroscope Tilting
+                    </button>
                     <div class="flex items-center space-x-2 w-full">
                         <button onclick="confirmTiltChoice('left')" class="flex-1 py-3 rounded-xl bg-blue-600/80 hover:bg-blue-600 text-white font-bold text-xs flex items-center justify-center space-x-1 active:scale-95 transition border border-blue-400/30">
                             <i class="fa-solid fa-arrow-left"></i>
@@ -380,6 +383,7 @@
         let gyroGamma = 0;
         let tiltSelectionLocked = false;
         let activeAnimationFrame = null;
+        let gyroActive = false;
 
         const rewardsData = [
             {
@@ -416,27 +420,55 @@
             }
         }
 
-        function requestGyroPermission() {
+        // --- ISSUE 2 FIX: Robust iOS & Android Gyroscope Permission Handling ---
+        function requestGyroPermission(isUserClick = false) {
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                 DeviceOrientationEvent.requestPermission()
                     .then(permissionState => {
                         if (permissionState === 'granted') {
-                            window.addEventListener('deviceorientation', handleOrientation);
+                            window.addEventListener('deviceorientation', handleOrientation, true);
+                            gyroActive = true;
+                            document.getElementById('enable-gyro-modal-btn')?.classList.add('hidden');
+                            if (isUserClick) playSound('tap');
+                        } else {
+                            if (isUserClick) alert('Gyroscope access is required for tilt controls. You can also use the pick buttons!');
                         }
                     })
-                    .catch(console.error);
+                    .catch(err => {
+                        console.error("Gyro Permission Error:", err);
+                    });
+            } else if ('DeviceOrientationEvent' in window) {
+                window.addEventListener('deviceorientation', handleOrientation, true);
+                gyroActive = true;
+                document.getElementById('enable-gyro-modal-btn')?.classList.add('hidden');
+                if (isUserClick) playSound('tap');
             } else {
-                window.addEventListener('deviceorientation', handleOrientation);
+                if (isUserClick) alert('Gyroscope / Device Orientation is not supported on this browser device.');
             }
         }
 
         function handleOrientation(event) {
-            if (event.gamma !== null) {
-                gyroGamma = event.gamma;
-                updateTiltCardUI();
+            let gamma = event.gamma;
+            if (gamma === null || gamma === undefined) return;
+
+            // Handle screen rotation orientation offset if device held in landscape
+            if (window.orientation === 90) {
+                gamma = event.beta;
+            } else if (window.orientation === -90) {
+                gamma = -event.beta;
             }
+
+            // Smooth gamma reading
+            gyroGamma = (gyroGamma * 0.6) + (gamma * 0.4);
+            updateTiltCardUI();
         }
-        window.addEventListener('deviceorientation', handleOrientation);
+
+        // Auto-attempt permission listener setup
+        window.addEventListener('load', () => {
+            if (typeof DeviceOrientationEvent === 'undefined' || typeof DeviceOrientationEvent.requestPermission !== 'function') {
+                requestGyroPermission(false);
+            }
+        });
 
         function updateTiltCardUI() {
             const cardModal = document.getElementById('tilt-reward-modal');
@@ -446,31 +478,41 @@
             const badge = document.getElementById('tilt-badge');
             const angleReadout = document.getElementById('gyro-angle-readout');
             
-            const angle = Math.max(-35, Math.min(35, gyroGamma));
-            if (angleReadout) angleReadout.innerText = `${Math.round(angle)}°`;
+            const clampedAngle = Math.max(-35, Math.min(35, gyroGamma));
+            if (angleReadout) angleReadout.innerText = `${Math.round(clampedAngle)}°`;
 
-            if (card) card.style.transform = `rotateY(${angle * 0.8}deg) rotateZ(${angle * 0.15}deg) translateX(${angle * 1.5}px)`;
+            if (card) {
+                card.style.transform = `rotateY(${clampedAngle * 1.1}deg) rotateZ(${clampedAngle * 0.2}deg) translateX(${clampedAngle * 1.8}px)`;
+            }
 
             const data = rewardsData[currentGameIndex];
+            if (!data) return;
 
-            if (angle < -12) {
+            // Sensitivity Thresholds for Tilt (-10 and +10 degrees)
+            if (clampedAngle < -10) {
                 if (badge) {
                     badge.innerText = "◀ OPTION A SELECTED";
-                    badge.className = "absolute top-3 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-blue-600 text-white shadow-lg";
+                    badge.className = "absolute top-3 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-blue-600 text-white shadow-lg animate-pulse";
                 }
                 document.getElementById('card-display-emoji').innerText = data.left.img;
                 document.getElementById('card-display-title').innerText = data.left.title;
                 document.getElementById('card-display-desc').innerText = `"${data.left.desc}"`;
-                if (angle < -24) confirmTiltChoice('left');
-            } else if (angle > 12) {
+
+                if (clampedAngle < -22) {
+                    confirmTiltChoice('left');
+                }
+            } else if (clampedAngle > 10) {
                 if (badge) {
                     badge.innerText = "OPTION B SELECTED ▶";
-                    badge.className = "absolute top-3 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-purple-600 text-white shadow-lg";
+                    badge.className = "absolute top-3 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-purple-600 text-white shadow-lg animate-pulse";
                 }
                 document.getElementById('card-display-emoji').innerText = data.right.img;
                 document.getElementById('card-display-title').innerText = data.right.title;
                 document.getElementById('card-display-desc').innerText = `"${data.right.desc}"`;
-                if (angle > 24) confirmTiltChoice('right');
+
+                if (clampedAngle > 22) {
+                    confirmTiltChoice('right');
+                }
             } else {
                 if (badge) {
                     badge.innerText = "CENTER (Tilt Left or Right)";
@@ -488,7 +530,7 @@
 
             const card = document.getElementById('tilt-card-element');
             if (card) {
-                card.style.transform = choice === 'left' ? 'translateX(-150%) rotate(-20deg)' : 'translateX(150%) rotate(20deg)';
+                card.style.transform = choice === 'left' ? 'translateX(-180%) rotate(-25deg)' : 'translateX(180%) rotate(25deg)';
                 card.style.opacity = '0';
             }
 
@@ -511,6 +553,7 @@
 
         function startArcadeJourney() {
             playSound('tap');
+            requestGyroPermission(false);
             document.getElementById('home-screen').classList.add('hidden');
             document.getElementById('progress-header').classList.remove('hidden');
             document.getElementById('game-screen').classList.remove('hidden');
@@ -554,6 +597,10 @@
             document.getElementById('card-display-emoji').innerText = '🎁';
             document.getElementById('card-display-title').innerText = 'Tilt Your Phone';
             document.getElementById('card-display-desc').innerText = `Tilt Left for "${data.left.title}" or Right for "${data.right.title}"!`;
+
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function' && !gyroActive) {
+                document.getElementById('enable-gyro-modal-btn')?.classList.remove('hidden');
+            }
 
             document.getElementById('tilt-reward-modal').classList.remove('hidden');
         }
@@ -620,7 +667,7 @@
             }
         }
 
-        // GAME 1: FLAPPY BIRD (Fast, 10 Exits Target)
+        // GAME 1: FLAPPY BIRD (Fast, Exactly 10 Pipes Target)
         function renderGame1_FlappyBird() {
             clearActiveGame();
 
@@ -645,7 +692,7 @@
                         </div>
                     </div>
 
-                    <div class="text-[10px] text-slate-400 font-medium">Fast action! Clear 10 gaps to win!</div>
+                    <div class="text-[10px] text-slate-400 font-medium">Clear 10 pipe gaps to win stage!</div>
                 </div>
             `;
 
@@ -654,7 +701,7 @@
             const canvas = document.getElementById('flappy-canvas');
             const ctx = canvas.getContext('2d');
             
-            // Snappy physics settings
+            const birdX = 60;
             let birdY = 180, velocity = 0, gravity = 0.42, jump = -6.8;
             let pipes = [], score = 0, frame = 0;
             let isGameOver = false;
@@ -700,7 +747,7 @@
                     heart.active = true;
                     heart.x = canvas.width + 20;
                     heart.y = birdY + (Math.random() * 60 - 30);
-                    heart.timer = 150; // 2.5s timer
+                    heart.timer = 150;
                 }
 
                 if (heart.active) {
@@ -711,8 +758,8 @@
                     }
                 }
 
-                // Pipe Generation (Snappy speed)
-                if (frame % 75 === 0) {
+                // Pipe Generation
+                if (frame % 85 === 0) {
                     const gap = 110;
                     const topH = Math.floor(Math.random() * (canvas.height - gap - 120)) + 40;
                     pipes.push({ x: canvas.width, topH, gap, passed: false });
@@ -721,39 +768,42 @@
                 ctx.fillStyle = '#70c5ce';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Pipes logic
+                // --- ISSUE 1 FIX: Accurate single-increment Pipe Passing Logic ---
                 for (let i = pipes.length - 1; i >= 0; i--) {
                     let p = pipes[i];
-                    p.x -= 2.8; // Snappy speed
+                    p.x -= 2.6; // Consistent pipe speed
 
+                    // Draw Top Pipe
                     ctx.fillStyle = '#73bf2e';
                     ctx.fillRect(p.x, 0, 44, p.topH);
                     ctx.fillStyle = '#558022';
                     ctx.fillRect(p.x - 2, p.topH - 14, 48, 14);
 
+                    // Draw Bottom Pipe
                     const botY = p.topH + p.gap;
                     ctx.fillStyle = '#73bf2e';
                     ctx.fillRect(p.x, botY, 44, canvas.height - botY - 35);
                     ctx.fillStyle = '#558022';
                     ctx.fillRect(p.x - 2, botY, 48, 14);
 
-                    // Score increment
-                    if (!p.passed && p.x + 44 < 60) {
+                    // Increment score ONLY once when the trailing edge of pipe passes bird position
+                    if (!p.passed && (p.x + 44) < birdX) {
                         p.passed = true;
                         score++;
                         playSound('score');
                         const scoreEl = document.getElementById('flappy-score');
                         if (scoreEl) scoreEl.innerText = score;
-                        if (score >= 10) { // 10 Exits Target
+
+                        if (score >= 10) { // Target 10 pipes
                             isGameOver = true;
                             onGameWin();
                             return;
                         }
                     }
 
-                    // Collision
+                    // Collision check with bird bounds
                     if (
-                        (60 + 10 > p.x && 60 - 10 < p.x + 44) &&
+                        (birdX + 10 > p.x && birdX - 10 < p.x + 44) &&
                         (birdY - 8 < p.topH || birdY + 8 > p.topH + p.gap)
                     ) {
                         isGameOver = true;
@@ -762,7 +812,7 @@
                         return;
                     }
 
-                    if (p.x < -50) pipes.splice(i, 1);
+                    if (p.x < -60) pipes.splice(i, 1);
                 }
 
                 // Ground
@@ -776,7 +826,7 @@
                     ctx.font = '22px serif';
                     ctx.fillText('🖤', heart.x - 11, heart.y + 8);
 
-                    if (Math.hypot(heart.x - 60, heart.y - birdY) < 18) {
+                    if (Math.hypot(heart.x - birdX, heart.y - birdY) < 18) {
                         isGameOver = true;
                         playSound('fail');
                         setTimeout(() => renderGame1_FlappyBird(), 200);
@@ -786,7 +836,7 @@
 
                 // Render Bird
                 ctx.save();
-                ctx.translate(60, birdY);
+                ctx.translate(birdX, birdY);
                 ctx.rotate(Math.min(Math.PI / 4, Math.max(-Math.PI / 4, velocity * 0.08)));
                 
                 ctx.fillStyle = '#f8e71c';
@@ -823,7 +873,7 @@
             activeAnimationFrame = requestAnimationFrame(loop);
         }
 
-        // GAME 2: TETRIS (Clear 3 Lines)
+        // GAME 2: TETRIS (Clear 3 Lines, Clean Heart & Hard Drop logic)
         function renderGame2_Tetris() {
             clearActiveGame();
 
@@ -874,30 +924,43 @@
             const shapes = [
                 [[1, 1, 1, 1]], [[1, 1, 1], [0, 1, 0]], [[1, 1], [1, 1]], [[1, 1, 0], [0, 1, 1]]
             ];
-            const colors = ['#06b6d4', '#a855f7', '#eab308', '#ef4444'];
+            const colors = ['#06b6d4', '#a855f7', '#eab308', '#22c55e'];
+
+            // Floating Evil Heart State separate from block piece data structure
+            let floatingHeart = {
+                active: false,
+                x: 4,
+                y: 2,
+                timer: 0
+            };
 
             function spawnPiece() {
-                if (Math.random() < 0.22) {
-                    return { shape: [[1]], color: '#ef4444', isHeart: true, x: 4, y: 0 };
+                // Spawn floating evil heart hazard occasionally without mutating the piece itself
+                if (!floatingHeart.active && Math.random() < 0.28) {
+                    floatingHeart.active = true;
+                    floatingHeart.x = Math.floor(Math.random() * (cols - 2)) + 1;
+                    floatingHeart.y = Math.floor(Math.random() * 8) + 2;
                 }
+
                 const idx = Math.floor(Math.random() * shapes.length);
-                return { shape: shapes[idx], color: colors[idx], isHeart: false, x: 3, y: 0 };
+                return { shape: shapes[idx], color: colors[idx], x: 3, y: 0 };
             }
 
             let current = spawnPiece();
             let dropCounter = 0;
 
+            // --- ISSUE 3 FIX: Dispel Evil Heart cleanly when tapped anywhere on canvas ---
             canvas.addEventListener('pointerdown', (e) => {
                 const rect = canvas.getBoundingClientRect();
                 const clickX = e.clientX - rect.left;
                 const clickY = e.clientY - rect.top;
 
-                if (current && current.isHeart) {
-                    const px = current.x * blockSize;
-                    const py = current.y * blockSize;
-                    if (clickX >= px && clickX <= px + blockSize && clickY >= py && clickY <= py + blockSize) {
+                if (floatingHeart.active) {
+                    const hPx = floatingHeart.x * blockSize + blockSize / 2;
+                    const hPy = floatingHeart.y * blockSize + blockSize / 2;
+                    if (Math.hypot(clickX - hPx, clickY - hPy) < blockSize * 1.5) {
+                        floatingHeart.active = false;
                         playSound('score');
-                        current = spawnPiece();
                         drawTetris();
                     }
                 }
@@ -931,6 +994,7 @@
                     });
                 });
 
+                // Clear completed lines
                 for (let r = rows - 1; r >= 0; r--) {
                     if (board[r].every(cell => cell !== 0)) {
                         board.splice(r, 1);
@@ -948,12 +1012,12 @@
                 current = spawnPiece();
             }
 
+            // --- ISSUE 3 FIX: Clean Hard Drop logic placing only valid tetromino block shapes ---
             window.tetrisControl = function(act) {
                 playSound('tap');
                 if (act === 'left' && validMove(current, -1, 0)) current.x--;
                 if (act === 'right' && validMove(current, 1, 0)) current.x++;
                 if (act === 'drop') {
-                    // Hard drop: step down unit by unit until piece hits another block or bottom
                     while (validMove(current, 0, 1)) {
                         current.y++;
                     }
@@ -970,29 +1034,35 @@
                 ctx.fillStyle = '#020617';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+                // Grid background lines
+                ctx.strokeStyle = '#1e293b';
+                ctx.lineWidth = 0.5;
                 for (let r = 0; r < rows; r++) {
                     for (let c = 0; c < cols; c++) {
+                        ctx.strokeRect(c * blockSize, r * blockSize, blockSize, blockSize);
                         if (board[r][c]) {
                             ctx.fillStyle = board[r][c];
-                            ctx.fillRect(c * blockSize, r * blockSize, blockSize - 1, blockSize - 1);
+                            ctx.fillRect(c * blockSize + 1, r * blockSize + 1, blockSize - 2, blockSize - 2);
                         }
                     }
                 }
 
+                // Render current active block piece
                 if (current) {
-                    if (current.isHeart) {
-                        ctx.font = '14px serif';
-                        ctx.fillText('🖤', current.x * blockSize + 1, (current.y + 1) * blockSize - 2);
-                    } else {
-                        ctx.fillStyle = current.color;
-                        current.shape.forEach((row, r) => {
-                            row.forEach((val, c) => {
-                                if (val) {
-                                    ctx.fillRect((current.x + c) * blockSize, (current.y + r) * blockSize, blockSize - 1, blockSize - 1);
-                                }
-                            });
+                    ctx.fillStyle = current.color;
+                    current.shape.forEach((row, r) => {
+                        row.forEach((val, c) => {
+                            if (val) {
+                                ctx.fillRect((current.x + c) * blockSize + 1, (current.y + r) * blockSize + 1, blockSize - 2, blockSize - 2);
+                            }
                         });
-                    }
+                    });
+                }
+
+                // Render Floating Evil Heart hazard if present
+                if (floatingHeart.active) {
+                    ctx.font = '14px serif';
+                    ctx.fillText('🖤', floatingHeart.x * blockSize + 1, (floatingHeart.y + 1) * blockSize - 2);
                 }
             }
 
@@ -1067,7 +1137,7 @@
                 const clickX = e.clientX - rect.left;
                 const clickY = e.clientY - rect.top;
 
-                if (Math.hypot(clickX - heartGhost.x, clickY - heartGhost.y) < 22) {
+                if (Math.hypot(clickX - heartGhost.x, clickY - heartGhost.y) < 25) {
                     heartGhost.stunnedTimer = 140;
                     playSound('score');
                 }
