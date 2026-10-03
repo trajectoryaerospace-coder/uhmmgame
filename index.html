@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>iOS Phone Arcade - 6 Mini-Games</title>
+    <title>iOS Phone Arcade - 6 Mini-Games with Tilt Rewards</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -13,7 +13,7 @@
             theme: {
                 extend: {
                     colors: {
-                        iosBg: '#0f172a',
+                        iosBg: '#020617',
                         iosCard: 'rgba(255, 255, 255, 0.85)',
                         iosDarkCard: 'rgba(30, 41, 59, 0.85)',
                         iosAccent: '#3b82f6',
@@ -29,6 +29,8 @@
     </script>
     
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;800;900&display=swap');
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
             background: #020617;
@@ -37,6 +39,10 @@
             -webkit-user-select: none;
             touch-action: manipulation;
             overflow: hidden;
+        }
+
+        .font-pixel {
+            font-family: 'Press Start 2P', monospace;
         }
 
         /* Glassmorphism Effect */
@@ -48,26 +54,26 @@
         }
 
         .ios-glass-dark {
-            background: rgba(15, 23, 42, 0.75);
+            background: rgba(15, 23, 42, 0.8);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* iPhone Display Frame Wrapper */
+        /* Phone Device Display Frame Wrapper */
         .iphone-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 410px;
             height: 100vh;
-            max-height: 850px;
+            max-height: 870px;
             aspect-ratio: 393 / 852;
             border-radius: 48px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 0 12px #1e293b, 0 0 0 14px #334155;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 12px #1e293b, 0 0 0 14px #334155;
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            background: linear-gradient(180deg, #0f172a 0%, #1e1b4b 100%);
+            background: linear-gradient(180deg, #0f172a 0%, #090d16 100%);
         }
 
         /* Dynamic Island */
@@ -108,11 +114,10 @@
         }
 
         .tilt-card {
-            transition: transform 0.1s ease-out, box-shadow 0.2s ease;
+            transition: transform 0.1s ease-out, box-shadow 0.2s ease, opacity 0.3s ease;
             will-change: transform;
         }
 
-        /* Smooth bounce & pulse */
         @keyframes pulseSoft {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
@@ -120,6 +125,10 @@
 
         .pulse-soft {
             animation: pulseSoft 2s infinite ease-in-out;
+        }
+
+        canvas {
+            image-rendering: pixelated;
         }
     </style>
 </head>
@@ -153,7 +162,7 @@
                     ⚡
                 </div>
                 <div>
-                    <h1 class="text-sm font-bold tracking-tight text-white leading-none">Arcade Arcade</h1>
+                    <h1 class="text-sm font-bold tracking-tight text-white leading-none">Arcade Quest</h1>
                     <span class="text-[10px] text-slate-400 font-medium">iOS Motion Edition</span>
                 </div>
             </div>
@@ -171,7 +180,7 @@
         <div id="progress-header" class="px-5 mb-2 hidden">
             <div class="flex justify-between items-center text-xs font-semibold mb-1">
                 <span id="game-step-title" class="text-blue-400">Game 1 of 6</span>
-                <span id="game-step-name" class="text-slate-300">Flappy Rocket</span>
+                <span id="game-step-name" class="text-slate-300">Flappy Bird</span>
             </div>
             <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden p-0.5 border border-white/5">
                 <div id="progress-bar-fill" class="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full transition-all duration-300" style="width: 16.6%"></div>
@@ -187,9 +196,9 @@
                     <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-blue-500 via-indigo-500 to-purple-600 flex items-center justify-center text-4xl shadow-2xl shadow-indigo-500/30 mb-6 pulse-soft border border-white/20">
                         🕹️
                     </div>
-                    <h1 class="text-3xl font-extrabold text-white mb-2 tracking-tight">iOS Arcade Quest</h1>
+                    <h1 class="text-3xl font-extrabold text-white mb-2 tracking-tight">Arcade Master Quest</h1>
                     <p class="text-xs text-slate-400 max-w-[260px] leading-relaxed mb-6">
-                        Play 6 real arcade web games. Tilt your phone Left or Right to pick awards after every win!
+                        Conquer 6 authentic retro arcade games. Tilt left/right to choose unique powers & cards after each win!
                     </p>
 
                     <div class="ios-glass p-3 rounded-2xl w-full max-w-[280px] mb-6 flex items-center space-x-3 text-left">
@@ -198,7 +207,7 @@
                         </div>
                         <div>
                             <div class="text-xs font-bold text-white">Motion Gyro Control</div>
-                            <div class="text-[10px] text-slate-400">Tilt phone left/right to choose awards</div>
+                            <div class="text-[10px] text-slate-400">Tilt phone left or right to swipe choices</div>
                         </div>
                     </div>
                 </div>
@@ -216,31 +225,28 @@
 
             <!-- VIEW 2: TILT / GYRO REWARD CHOICE OVERLAY -->
             <div id="tilt-reward-modal" class="absolute inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex flex-col justify-between p-5 hidden">
-                <div class="text-center pt-4">
+                <div class="text-center pt-2">
                     <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px] uppercase tracking-wider border border-emerald-500/30">Stage Cleared!</span>
-                    <h2 class="text-2xl font-bold text-white mt-2">Tilt To Choose Reward</h2>
-                    <p class="text-xs text-slate-400 mt-1">Tilt phone Left or Right to lock in your card!</p>
+                    <h2 class="text-xl font-bold text-white mt-1">Tilt To Choose Reward</h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Tilt phone Left or Right to lock in card!</p>
                 </div>
 
                 <!-- 3D TILT CARD PREVIEW -->
                 <div class="tilt-card-wrapper my-auto w-full flex justify-center items-center">
-                    <div id="tilt-card-element" class="tilt-card w-full max-w-[280px] h-[340px] rounded-3xl ios-glass p-5 flex flex-col justify-between items-center border-2 border-white/20 shadow-2xl relative overflow-hidden">
+                    <div id="tilt-card-element" class="tilt-card w-full max-w-[280px] h-[330px] rounded-3xl ios-glass p-5 flex flex-col justify-between items-center border-2 border-white/20 shadow-2xl relative overflow-hidden">
                         
-                        <!-- Direction Badge Overlay -->
-                        <div id="tilt-badge" class="absolute top-3 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-slate-800/80 text-white border border-white/10 shadow">
+                        <div id="tilt-badge" class="absolute top-3 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-slate-800/80 text-white border border-white/10 shadow">
                             CENTER (Tilt Left or Right)
                         </div>
 
-                        <!-- Card Content Container -->
                         <div class="my-auto flex flex-col items-center text-center w-full">
-                            <div id="card-display-emoji" class="text-7xl mb-4 drop-shadow-lg transition-transform">
+                            <div id="card-display-emoji" class="text-6xl mb-3 drop-shadow-lg transition-transform">
                                 🎁
                             </div>
-                            <h3 id="card-display-title" class="text-xl font-bold text-white mb-1">Tilt Your Phone</h3>
+                            <h3 id="card-display-title" class="text-lg font-bold text-white mb-1">Tilt Your Phone</h3>
                             <p id="card-display-desc" class="text-xs text-slate-300 italic px-2">Lean Left for Option A or Right for Option B!</p>
                         </div>
 
-                        <!-- Gyro Angle Live Meter Indicator -->
                         <div class="w-full bg-slate-900/80 rounded-xl p-2 border border-white/10 flex items-center justify-between text-[10px] font-mono text-slate-400">
                             <span id="left-option-label" class="text-blue-400 font-bold">◀ OPTION A</span>
                             <span id="gyro-angle-readout">0°</span>
@@ -249,46 +255,43 @@
                     </div>
                 </div>
 
-                <!-- Manual Touch/Button Fallback for Non-Gyro / Desktop -->
-                <div class="w-full flex flex-col items-center space-y-3 pb-2">
+                <!-- Fallback buttons -->
+                <div class="w-full flex flex-col items-center space-y-2 pb-2">
                     <div class="flex items-center space-x-3 w-full">
                         <button onclick="confirmTiltChoice('left')" class="flex-1 py-3 rounded-xl bg-blue-600/80 hover:bg-blue-600 text-white font-bold text-xs flex items-center justify-center space-x-1 active:scale-95 transition border border-blue-400/30">
                             <i class="fa-solid fa-arrow-left"></i>
-                            <span>Pick Left (A)</span>
+                            <span id="btn-label-left">Pick Left (A)</span>
                         </button>
                         <button onclick="confirmTiltChoice('right')" class="flex-1 py-3 rounded-xl bg-purple-600/80 hover:bg-purple-600 text-white font-bold text-xs flex items-center justify-center space-x-1 active:scale-95 transition border border-purple-400/30">
-                            <span>Pick Right (B)</span>
+                            <span id="btn-label-right">Pick Right (B)</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
-                    <span class="text-[10px] text-slate-500">Works automatically on phone tilt or via tap buttons</span>
                 </div>
             </div>
 
             <!-- VIEW 3: FINALE SCREEN -->
             <div id="finale-screen" class="w-full h-full flex flex-col justify-between items-center text-center py-4 hidden">
                 <div class="my-auto flex flex-col items-center w-full">
-                    <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-amber-400 to-emerald-500 flex items-center justify-center text-4xl shadow-xl shadow-amber-500/20 mb-4 border border-white/20">
+                    <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-amber-400 to-emerald-500 flex items-center justify-center text-4xl shadow-xl shadow-amber-500/20 mb-4 border border-white/20 pulse-soft">
                         🏆
                     </div>
                     <h1 class="text-2xl font-extrabold text-white mb-1">Arcade Master!</h1>
                     <p class="text-xs text-slate-400 max-w-[260px] mb-6">
-                        You completed all 6 games! Unlocked full reward card set.
+                        You conquered all 6 arcade levels including the chaotic Chrome Dino escape!
                     </p>
 
-                    <!-- Grand Prize Trophy Button -->
                     <button onclick="showGrandTrophyModal()" class="w-full max-w-[280px] p-4 rounded-2xl bg-gradient-to-r from-amber-500 to-emerald-500 text-slate-950 font-black text-sm shadow-xl shadow-emerald-500/20 mb-3 flex items-center justify-between active:scale-95 transition">
                         <div class="flex items-center space-x-3">
                             <span class="text-2xl">✨</span>
                             <div class="text-left">
-                                <div class="text-xs uppercase font-extrabold tracking-wider text-slate-900/70">Grand Prize</div>
+                                <div class="text-xs uppercase font-extrabold tracking-wider text-slate-900/70">Grand Finale</div>
                                 <div class="text-base font-black">View Grand Trophy</div>
                             </div>
                         </div>
                         <i class="fa-solid fa-chevron-right text-sm"></i>
                     </button>
 
-                    <!-- Open Collection Album Button -->
                     <button onclick="openGalleryModal()" class="w-full max-w-[280px] p-3 rounded-2xl ios-glass text-white font-bold text-xs shadow mb-6 flex items-center justify-between active:scale-95 transition">
                         <div class="flex items-center space-x-2">
                             <span class="text-lg">🖼️</span>
@@ -298,10 +301,9 @@
                     </button>
                 </div>
 
-                <!-- Replay Journey Option -->
                 <button onclick="restartArcadeJourney()" class="w-full max-w-[280px] py-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition flex items-center justify-center space-x-2">
                     <i class="fa-solid fa-rotate-right"></i>
-                    <span>Restart Journey (Unlock Missed Cards)</span>
+                    <span>Restart Journey</span>
                 </button>
             </div>
 
@@ -312,13 +314,13 @@
             <div class="w-full max-w-[300px] ios-glass p-6 rounded-3xl border border-white/20 text-center relative flex flex-col items-center">
                 <button onclick="closeGrandTrophyModal()" class="absolute top-3 right-3 w-7 h-7 rounded-full bg-white/10 text-white flex items-center justify-center text-xs font-bold">✕</button>
                 
-                <div class="w-24 h-24 my-3 text-7xl flex items-center justify-center pulse-soft">
+                <div class="w-20 h-20 my-2 text-6xl flex items-center justify-center pulse-soft">
                     👑
                 </div>
                 <h3 class="text-xl font-black text-white">Ultimate Champion</h3>
                 <p class="text-xs text-amber-400 font-semibold mb-3">6/6 Games Mastered</p>
                 <div class="bg-white/5 p-3 rounded-xl text-left text-[11px] text-slate-300 mb-4 border border-white/5 leading-relaxed">
-                    Proof of supreme reflex, strategy, and precision across 6 arcade challenges!
+                    Proven supreme reflexes, retro strategy, and agility across Flappy, 2048, Tetris, Pac-Man, Breakout, and the Meteor Dino chaos!
                 </div>
                 <button onclick="triggerConfetti(); closeGrandTrophyModal();" class="w-full py-2.5 rounded-xl bg-amber-400 text-slate-950 font-black text-xs shadow-lg">
                     🎉 Celebrate Victory!
@@ -331,7 +333,7 @@
             <div class="flex justify-between items-center mb-3">
                 <div>
                     <h3 class="text-lg font-bold text-white">Card Collection</h3>
-                    <p class="text-[10px] text-slate-400">Collected vs Missed Rewards</p>
+                    <p class="text-[10px] text-slate-400">Chosen vs Missed Rewards</p>
                 </div>
                 <button onclick="closeGalleryModal()" class="w-7 h-7 rounded-full bg-white/10 text-white flex items-center justify-center text-xs font-bold">✕</button>
             </div>
@@ -341,16 +343,16 @@
             </div>
 
             <button onclick="closeGalleryModal(); restartArcadeJourney();" class="w-full py-3 rounded-xl bg-blue-600 text-white font-bold text-xs">
-                Replay To Collect Remaining Cards
+                Replay Journey
             </button>
         </div>
 
-        <!-- Home Indicator Bar (iOS Shell Bottom) -->
+        <!-- Home Indicator Bar -->
         <div class="home-indicator"></div>
     </div>
 
     <script>
-        // Clock Display
+        // Clock Update
         function updateClock() {
             const now = new Date();
             const hrs = String(now.getHours()).padStart(2, '0');
@@ -377,18 +379,16 @@
                 if (type === 'tap') {
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(600, now);
-                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.setValueAtTime(0.15, now);
                     gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
-                    osc.start(now);
-                    osc.stop(now + 0.05);
+                    osc.start(now); osc.stop(now + 0.05);
                 } else if (type === 'score') {
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(440, now);
                     osc.frequency.exponentialRampToValueAtTime(880, now + 0.1);
-                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.setValueAtTime(0.15, now);
                     gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-                    osc.start(now);
-                    osc.stop(now + 0.1);
+                    osc.start(now); osc.stop(now + 0.1);
                 } else if (type === 'win') {
                     osc.type = 'square';
                     osc.frequency.setValueAtTime(523.25, now);
@@ -397,16 +397,14 @@
                     osc.frequency.setValueAtTime(1046.50, now + 0.3);
                     gain.gain.setValueAtTime(0.2, now);
                     gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-                    osc.start(now);
-                    osc.stop(now + 0.4);
-                } else if (type === 'fail') {
+                    osc.start(now); osc.stop(now + 0.4);
+                } else if (type === 'fail' || type === 'boom') {
                     osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(300, now);
-                    osc.frequency.linearRampToValueAtTime(120, now + 0.2);
-                    gain.gain.setValueAtTime(0.2, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
-                    osc.start(now);
-                    osc.stop(now + 0.2);
+                    osc.frequency.setValueAtTime(250, now);
+                    osc.frequency.linearRampToValueAtTime(60, now + 0.25);
+                    gain.gain.setValueAtTime(0.25, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now); osc.stop(now + 0.25);
                 }
             } catch(e) {}
         }
@@ -416,47 +414,45 @@
             document.getElementById('sound-icon').className = isAudioOn ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
         }
 
-        // Global State variables
         let currentGameIndex = 0;
         let collectedRewards = [];
-        let gyroGamma = 0; // Gyro Left/Right angle (-90 to +90)
+        let gyroGamma = 0;
         let tiltSelectionLocked = false;
+        let activeInterval = null;
 
-        // Reward Options Data (Arcade Themed Cards)
         const rewardsData = [
             {
-                game: "Flappy Rocket",
-                left: { img: "⚡", title: "Hyper Thruster", desc: "Speed boost tech badge" },
-                right: { img: "🛸", title: "Alien Scout", desc: "Cosmic explorer vessel" }
+                game: "Flappy Bird",
+                left: { img: "🥇", title: "Golden Flapper", desc: "Legendary winged mobility badge" },
+                right: { img: "🚀", title: "Rocket Thruster", desc: "Anti-gravity boost tech" }
             },
             {
-                game: "Color Switch",
-                left: { img: "🌈", title: "Prism Core", desc: "Spectrum color crystal" },
-                right: { img: "🎨", title: "Neo Palette", desc: "Vibrant cyber paint drive" }
+                game: "2048",
+                left: { img: "🔢", title: "Tile Fusion Core", desc: "Doubles merge score efficiency" },
+                right: { img: "🧠", title: "Quantum Matrix", desc: "Predicts tile spawning paths" }
             },
             {
-                game: "Tower Stack",
-                left: { img: "🏙️", title: "Cyber Tower", desc: "Architectural blueprint" },
-                right: { img: "🧱", title: "Golden Mason", desc: "Perfect alignment emblem" }
+                game: "Tetris",
+                left: { img: "🧊", title: "Hard Drop Shield", desc: "Prevents misplacement errors" },
+                right: { img: "⚡", title: "T-Spin Overdrive", desc: "Quadruples line clears" }
             },
             {
-                game: "Speed Slicer",
-                left: { img: "⚔️", title: "Laser Katana", desc: "Precision cutting blade" },
-                right: { img: "🍉", title: "Cyber Fruit", desc: "Bio-engineered snack" }
-            },
-            {
-                game: "Cyber Runner",
-                left: { img: "🏎️", title: "Neon Racer", desc: "High-speed cyber vehicle" },
-                right: { img: "⚡", title: "Overdrive Battery", desc: "Maximum voltage power-up" }
+                game: "Pac-Man",
+                left: { img: "🍒", title: "Cherry Rush", desc: "Permanent ghosts slowdown" },
+                right: { img: "👻", title: "Phantom Cloak", desc: "Brief invincibility shield" }
             },
             {
                 game: "Brick Breaker",
-                left: { img: "🛡️", title: "Force Shield", desc: "Unbreakable barrier" },
-                right: { img: "🔮", title: "Multi-Ball Orb", desc: "Quantum duplicate orb" }
+                left: { img: "🔮", title: "Plasma Multi-Ball", desc: "Duplicates active balls" },
+                right: { img: "🛡️", title: "Titan Paddle", desc: "Extends paddle by 50%" }
+            },
+            {
+                game: "Chrome Dino Chaos",
+                left: { img: "🦖", title: "Dino Crown", desc: "Apex meteor survivor badge" },
+                right: { img: "☄️", title: "Meteor Master", desc: "Chaotic realm mastery trophy" }
             }
         ];
 
-        // Device Orientation Gyro Handler
         function requestGyroPermission() {
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                 DeviceOrientationEvent.requestPermission()
@@ -472,7 +468,6 @@
         }
 
         function handleOrientation(event) {
-            // gamma is left-to-right tilt in degrees (-90 to 90)
             if (event.gamma !== null) {
                 gyroGamma = event.gamma;
                 updateTiltCardUI();
@@ -480,7 +475,6 @@
         }
         window.addEventListener('deviceorientation', handleOrientation);
 
-        // Update 3D Tilt Card preview based on Gyro
         function updateTiltCardUI() {
             const cardModal = document.getElementById('tilt-reward-modal');
             if (cardModal.classList.contains('hidden') || tiltSelectionLocked) return;
@@ -489,56 +483,40 @@
             const badge = document.getElementById('tilt-badge');
             const angleReadout = document.getElementById('gyro-angle-readout');
             
-            // Limit angle range for UI (-30 to +30 deg)
             const angle = Math.max(-35, Math.min(35, gyroGamma));
             angleReadout.innerText = `${Math.round(angle)}°`;
 
-            // Rotate card in 3D perspective
-            card.style.transform = `rotateY(${angle * 0.8}deg) rotateZ(${angle * 0.2}deg) translateX(${angle * 1.5}px)`;
+            card.style.transform = `rotateY(${angle * 0.8}deg) rotateZ(${angle * 0.15}deg) translateX(${angle * 1.5}px)`;
 
             const data = rewardsData[currentGameIndex];
 
             if (angle < -12) {
-                // Tilted Left -> Option A
                 badge.innerText = "◀ OPTION A SELECTED";
-                badge.className = "absolute top-3 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-blue-600 text-white shadow-lg";
+                badge.className = "absolute top-3 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-blue-600 text-white shadow-lg";
                 document.getElementById('card-display-emoji').innerText = data.left.img;
                 document.getElementById('card-display-title').innerText = data.left.title;
                 document.getElementById('card-display-desc').innerText = `"${data.left.desc}"`;
-                
-                // Auto trigger if tilted far enough (>22 deg)
                 if (angle < -24) confirmTiltChoice('left');
-
             } else if (angle > 12) {
-                // Tilted Right -> Option B
                 badge.innerText = "OPTION B SELECTED ▶";
-                badge.className = "absolute top-3 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-purple-600 text-white shadow-lg";
+                badge.className = "absolute top-3 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-purple-600 text-white shadow-lg";
                 document.getElementById('card-display-emoji').innerText = data.right.img;
                 document.getElementById('card-display-title').innerText = data.right.title;
                 document.getElementById('card-display-desc').innerText = `"${data.right.desc}"`;
-
-                // Auto trigger if tilted far enough (>22 deg)
                 if (angle > 24) confirmTiltChoice('right');
-
             } else {
-                // Center
                 badge.innerText = "CENTER (Tilt Left or Right)";
-                badge.className = "absolute top-3 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-slate-800/80 text-white border border-white/10 shadow";
+                badge.className = "absolute top-3 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-slate-800/80 text-white border border-white/10 shadow";
             }
         }
 
-        // Lock in Card Choice
         function confirmTiltChoice(choice) {
             if (tiltSelectionLocked) return;
             tiltSelectionLocked = true;
             playSound('win');
 
-            collectedRewards.push({
-                gameIndex: currentGameIndex,
-                choice: choice
-            });
+            collectedRewards.push({ gameIndex: currentGameIndex, choice: choice });
 
-            // Animate card swipe away
             const card = document.getElementById('tilt-card-element');
             card.style.transform = choice === 'left' ? 'translateX(-150%) rotate(-20deg)' : 'translateX(150%) rotate(20deg)';
             card.style.opacity = '0';
@@ -558,7 +536,6 @@
             }, 400);
         }
 
-        // Journey Navigation Engine
         function startArcadeJourney() {
             playSound('tap');
             document.getElementById('home-screen').classList.add('hidden');
@@ -570,34 +547,45 @@
         }
 
         function updateProgressBar() {
-            const stepNames = ["Flappy Rocket", "Color Switch", "Tower Stack", "Speed Slicer", "Cyber Runner", "Brick Breaker"];
+            const stepNames = ["Flappy Bird", "2048", "Tetris", "Pac-Man", "Breakout", "Chrome Dino Chaos"];
             document.getElementById('game-step-title').innerText = `Game ${currentGameIndex + 1} of 6`;
             document.getElementById('game-step-name').innerText = stepNames[currentGameIndex];
             const pct = ((currentGameIndex + 1) / 6) * 100;
             document.getElementById('progress-bar-fill').style.width = `${pct}%`;
         }
 
+        function clearActiveGame() {
+            if (activeInterval) {
+                clearInterval(activeInterval);
+                activeInterval = null;
+            }
+        }
+
         function loadGame(index) {
+            clearActiveGame();
             updateProgressBar();
             const screen = document.getElementById('game-screen');
             screen.innerHTML = '';
 
             switch(index) {
-                case 0: renderGame1_FlappyRocket(); break;
-                case 1: renderGame2_ColorSwitch(); break;
-                case 2: renderGame3_TowerStack(); break;
-                case 3: renderGame4_FruitSlicer(); break;
-                case 4: renderGame5_CyberRunner(); break;
-                case 5: renderGame6_BrickBreaker(); break;
+                case 0: renderGame1_FlappyBird(); break;
+                case 1: renderGame2_2048(); break;
+                case 2: renderGame3_Tetris(); break;
+                case 3: renderGame4_Pacman(); break;
+                case 4: renderGame5_Breakout(); break;
+                case 5: renderGame6_ChromeDinoChaos(); break;
             }
         }
 
         function onGameWin() {
+            clearActiveGame();
             playSound('win');
             triggerConfetti();
             const data = rewardsData[currentGameIndex];
 
-            // Reset Card UI Defaults
+            document.getElementById('btn-label-left').innerText = data.left.title;
+            document.getElementById('btn-label-right').innerText = data.right.title;
+
             document.getElementById('card-display-emoji').innerText = '🎁';
             document.getElementById('card-display-title').innerText = 'Tilt Your Phone';
             document.getElementById('card-display-desc').innerText = `Tilt Left for "${data.left.title}" or Right for "${data.right.title}"!`;
@@ -667,32 +655,32 @@
 
 
         // ==========================================
-        // GAME 1: FLAPPY ROCKET
+        // GAME 1: FLAPPY BIRD (EXACT REPLICA)
         // ==========================================
-        function renderGame1_FlappyRocket() {
+        function renderGame1_FlappyBird() {
             const container = document.getElementById('game-screen');
             container.innerHTML = `
-                <div class="w-full h-full flex flex-col items-center justify-between py-2">
+                <div class="w-full h-full flex flex-col items-center justify-between py-2 select-none">
                     <div class="text-center">
-                        <h2 class="text-lg font-bold text-white">Flappy Rocket</h2>
-                        <p class="text-[10px] text-slate-400">Tap screen to fly! Score 5 points to win</p>
+                        <h2 class="text-sm font-pixel text-yellow-400 drop-shadow">FLAPPY BIRD</h2>
+                        <p class="text-[10px] text-slate-300 mt-1">Tap screen to flap. Reach 5 points to win!</p>
                     </div>
 
-                    <div class="relative w-full max-w-[300px] h-[380px] bg-slate-900 rounded-3xl overflow-hidden border border-white/10 shadow-inner">
-                        <canvas id="flappy-canvas" width="300" height="380" class="w-full h-full"></canvas>
-                        <div class="absolute top-3 left-3 bg-slate-950/80 px-3 py-1 rounded-full text-xs font-bold text-blue-400 border border-white/10">
-                            Score: <span id="flappy-score">0</span> / 5
+                    <div class="relative w-full max-w-[300px] h-[400px] bg-cyan-300 rounded-3xl overflow-hidden border-4 border-slate-800 shadow-2xl cursor-pointer">
+                        <canvas id="flappy-canvas" width="300" height="400" class="w-full h-full"></canvas>
+                        <div class="absolute top-3 left-1/2 -translate-x-1/2 bg-slate-900/80 px-4 py-1 rounded-full border border-white/20 text-white font-pixel text-xs">
+                            SCORE: <span id="flappy-score" class="text-yellow-400">0</span>/5
                         </div>
                     </div>
 
-                    <div class="text-[11px] text-slate-400 font-semibold">Tap anywhere on canvas to flap</div>
+                    <div class="text-[11px] text-slate-400 font-semibold">Tap anywhere on canvas</div>
                 </div>
             `;
 
             const canvas = document.getElementById('flappy-canvas');
             const ctx = canvas.getContext('2d');
-            let rocketY = 190, velocity = 0, gravity = 0.35, jump = -6;
-            let pipes = [], score = 0, gameLoop, frame = 0;
+            let birdY = 200, velocity = 0, gravity = 0.38, jump = -6.2;
+            let pipes = [], score = 0, frame = 0, groundX = 0;
 
             function flap() {
                 playSound('tap');
@@ -700,440 +688,526 @@
             }
             canvas.parentElement.addEventListener('pointerdown', flap);
 
-            gameLoop = setInterval(() => {
+            activeInterval = setInterval(() => {
                 frame++;
                 velocity += gravity;
-                rocketY += velocity;
+                birdY += velocity;
+                groundX = (groundX - 2) % 20;
 
-                // Spawn Pipes
-                if (frame % 80 === 0) {
-                    const gap = 110;
-                    const topH = Math.floor(Math.random() * (canvas.height - gap - 80)) + 30;
+                if (frame % 85 === 0) {
+                    const gap = 100;
+                    const topH = Math.floor(Math.random() * (canvas.height - gap - 120)) + 40;
                     pipes.push({ x: canvas.width, topH, gap, passed: false });
                 }
 
-                // Render Background
-                ctx.fillStyle = '#0f172a';
+                // Sky
+                ctx.fillStyle = '#70c5ce';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Draw Rocket
-                ctx.font = '24px serif';
-                ctx.fillText('🚀', 50, rocketY);
+                // Pipes
+                pipes.forEach(p => {
+                    p.x -= 2;
 
-                // Update Pipes
-                for (let i = pipes.length - 1; i >= 0; i--) {
-                    let p = pipes[i];
-                    p.x -= 2.2;
+                    // Top Pipe
+                    ctx.fillStyle = '#73bf2e';
+                    ctx.fillRect(p.x, 0, 48, p.topH);
+                    ctx.fillStyle = '#558022';
+                    ctx.fillRect(p.x - 3, p.topH - 16, 54, 16);
 
-                    ctx.fillStyle = '#3b82f6';
-                    ctx.fillRect(p.x, 0, 36, p.topH);
-                    ctx.fillRect(p.x, p.topH + p.gap, 36, canvas.height - (p.topH + p.gap));
+                    // Bottom Pipe
+                    const botY = p.topH + p.gap;
+                    ctx.fillStyle = '#73bf2e';
+                    ctx.fillRect(p.x, botY, 48, canvas.height - botY - 40);
+                    ctx.fillStyle = '#558022';
+                    ctx.fillRect(p.x - 3, botY, 54, 16);
 
                     // Score Check
-                    if (!p.passed && p.x < 50) {
+                    if (!p.passed && p.x + 48 < 70) {
                         p.passed = true;
                         score++;
                         playSound('score');
                         document.getElementById('flappy-score').innerText = score;
                         if (score >= 5) {
-                            clearInterval(gameLoop);
                             onGameWin();
-                            return;
                         }
                     }
 
                     // Collision Check
                     if (
-                        (50 + 20 > p.x && 50 < p.x + 36) &&
-                        (rocketY - 18 < p.topH || rocketY > p.topH + p.gap)
+                        (70 + 16 > p.x && 70 - 16 < p.x + 48) &&
+                        (birdY - 12 < p.topH || birdY + 12 > p.topH + p.gap)
                     ) {
                         playSound('fail');
-                        clearInterval(gameLoop);
-                        renderGame1_FlappyRocket(); // Reset
-                        return;
+                        renderGame1_FlappyBird();
                     }
-                }
-
-                // Floor/Ceiling bounds
-                if (rocketY > canvas.height || rocketY < 0) {
-                    playSound('fail');
-                    clearInterval(gameLoop);
-                    renderGame1_FlappyRocket(); // Reset
-                }
-            }, 1000 / 60);
-        }
-
-
-        // ==========================================
-        // GAME 2: COLOR SWITCH
-        // ==========================================
-        function renderGame2_ColorSwitch() {
-            const container = document.getElementById('game-screen');
-            container.innerHTML = `
-                <div class="w-full h-full flex flex-col items-center justify-between py-2">
-                    <div class="text-center">
-                        <h2 class="text-lg font-bold text-white">Color Switch</h2>
-                        <p class="text-[10px] text-slate-400">Pass ball through matching color segment! Score 4</p>
-                    </div>
-
-                    <div class="relative w-full max-w-[300px] h-[380px] bg-slate-900 rounded-3xl overflow-hidden border border-white/10 flex flex-col items-center justify-between p-4 cursor-pointer" id="color-switch-area">
-                        <div class="w-full flex justify-between text-xs font-bold text-slate-300 z-10">
-                            <span>Score: <span id="cs-score" class="text-blue-400">0</span> / 4</span>
-                        </div>
-
-                        <canvas id="cs-canvas" width="280" height="320" class="w-full h-full"></canvas>
-                    </div>
-
-                    <div class="text-[11px] text-slate-400 font-semibold">Tap to jump ball upwards</div>
-                </div>
-            `;
-
-            const canvas = document.getElementById('cs-canvas');
-            const ctx = canvas.getContext('2d');
-            const colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b'];
-
-            let ballY = 260, ballVelocity = 0, gravity = 0.25, jump = -5;
-            let ballColor = colors[0];
-            let wheelAngle = 0, score = 0, loop;
-
-            function jumpBall() {
-                playSound('tap');
-                ballVelocity = jump;
-            }
-            document.getElementById('color-switch-area').addEventListener('pointerdown', jumpBall);
-
-            loop = setInterval(() => {
-                ballVelocity += gravity;
-                ballY += ballVelocity;
-                wheelAngle += 0.03;
-
-                ctx.fillStyle = '#0f172a';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                // Draw Rotating Wheel
-                const centerX = 140, centerY = 120, outerR = 60, innerR = 48;
-                for (let i = 0; i < 4; i++) {
-                    const startA = wheelAngle + (i * Math.PI / 2);
-                    const endA = startA + (Math.PI / 2);
-
-                    ctx.beginPath();
-                    ctx.arc(centerX, centerY, outerR, startA, endA);
-                    ctx.arc(centerX, centerY, innerR, endA, startA, true);
-                    ctx.closePath();
-                    ctx.fillStyle = colors[i];
-                    ctx.fill();
-                }
-
-                // Draw Ball
-                ctx.beginPath();
-                ctx.arc(centerX, ballY, 10, 0, Math.PI * 2);
-                ctx.fillStyle = ballColor;
-                ctx.fill();
-
-                // Pass obstacle check
-                if (ballY <= centerY + 10 && ballY >= centerY - 10) {
-                    // Check if ball color matches top/bottom sector
-                    score++;
-                    playSound('score');
-                    document.getElementById('cs-score').innerText = score;
-                    ballY = 260; // Reset ball position
-                    ballColor = colors[Math.floor(Math.random() * 4)];
-
-                    if (score >= 4) {
-                        clearInterval(loop);
-                        onGameWin();
-                        return;
-                    }
-                }
-
-                // Bottom fail
-                if (ballY > canvas.height + 20) {
-                    playSound('fail');
-                    clearInterval(loop);
-                    renderGame2_ColorSwitch();
-                }
-            }, 1000 / 60);
-        }
-
-
-        // ==========================================
-        // GAME 3: TOWER STACK
-        // ==========================================
-        function renderGame3_TowerStack() {
-            const container = document.getElementById('game-screen');
-            container.innerHTML = `
-                <div class="w-full h-full flex flex-col items-center justify-between py-2">
-                    <div class="text-center">
-                        <h2 class="text-lg font-bold text-white">Tower Stack</h2>
-                        <p class="text-[10px] text-slate-400">Tap to drop moving block precisely! Stack 6 blocks</p>
-                    </div>
-
-                    <div id="stack-area" class="relative w-full max-w-[300px] h-[380px] bg-slate-900 rounded-3xl overflow-hidden border border-white/10 cursor-pointer">
-                        <canvas id="stack-canvas" width="300" height="380" class="w-full h-full"></canvas>
-                        <div class="absolute top-3 left-3 bg-slate-950/80 px-3 py-1 rounded-full text-xs font-bold text-blue-400 border border-white/10">
-                            Blocks: <span id="stack-score">0</span> / 6
-                        </div>
-                    </div>
-
-                    <div class="text-[11px] text-slate-400 font-semibold">Tap anywhere to drop platform</div>
-                </div>
-            `;
-
-            const canvas = document.getElementById('stack-canvas');
-            const ctx = canvas.getContext('2d');
-
-            let stack = [{ x: 90, w: 120, y: 340 }];
-            let currentW = 120, currentX = 0, speed = 3, dir = 1;
-            let score = 0, loop;
-
-            function dropBlock() {
-                playSound('tap');
-                const last = stack[stack.length - 1];
-                const diff = currentX - last.x;
-
-                if (Math.abs(diff) >= currentW) {
-                    // Missed complete block
-                    playSound('fail');
-                    clearInterval(loop);
-                    renderGame3_TowerStack();
-                    return;
-                }
-
-                // Trim block width based on accuracy
-                currentW -= Math.abs(diff);
-                const newX = diff > 0 ? currentX : last.x;
-                stack.push({ x: newX, w: currentW, y: 340 - (stack.length * 28) });
-
-                score++;
-                playSound('score');
-                document.getElementById('stack-score').innerText = score;
-
-                if (score >= 6) {
-                    clearInterval(loop);
-                    onGameWin();
-                    return;
-                }
-
-                currentX = 0;
-            }
-
-            document.getElementById('stack-area').addEventListener('pointerdown', dropBlock);
-
-            loop = setInterval(() => {
-                currentX += speed * dir;
-                if (currentX + currentW > canvas.width || currentX < 0) dir *= -1;
-
-                ctx.fillStyle = '#0f172a';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                // Draw existing stack
-                stack.forEach((b, i) => {
-                    ctx.fillStyle = `hsl(${(i * 40) % 360}, 80%, 60%)`;
-                    ctx.fillRect(b.x, b.y, b.w, 24);
                 });
 
-                // Draw current moving block
-                const currentY = 340 - (stack.length * 28);
-                ctx.fillStyle = `hsl(${(stack.length * 40) % 360}, 80%, 60%)`;
-                ctx.fillRect(currentX, currentY, currentW, 24);
+                // Ground
+                ctx.fillStyle = '#ddd894';
+                ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
+                ctx.fillStyle = '#ded895';
+                ctx.fillRect(0, canvas.height - 40, canvas.width, 8);
+                ctx.fillStyle = '#73bf2e';
+                ctx.fillRect(0, canvas.height - 40, canvas.width, 6);
+
+                // Draw Flappy Bird
+                ctx.save();
+                ctx.translate(70, birdY);
+                ctx.rotate(Math.min(Math.PI / 4, Math.max(-Math.PI / 4, velocity * 0.08)));
+                
+                // Bird body
+                ctx.fillStyle = '#f8e71c';
+                ctx.beginPath();
+                ctx.arc(0, 0, 14, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Eye
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(5, -4, 5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(6, -4, 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Beak
+                ctx.fillStyle = '#f5a623';
+                ctx.fillRect(8, 0, 10, 6);
+
+                ctx.restore();
+
+                // Floor/Ceiling collision
+                if (birdY > canvas.height - 52 || birdY < 0) {
+                    playSound('fail');
+                    renderGame1_FlappyBird();
+                }
             }, 1000 / 60);
         }
 
 
         // ==========================================
-        // GAME 4: SPEED SLICER
+        // GAME 2: 2048 (EXACT REPLICA)
         // ==========================================
-        function renderGame4_FruitSlicer() {
+        function renderGame2_2048() {
             const container = document.getElementById('game-screen');
             container.innerHTML = `
-                <div class="w-full h-full flex flex-col items-center justify-between py-2">
+                <div class="w-full h-full flex flex-col items-center justify-between py-2 select-none">
                     <div class="text-center">
-                        <h2 class="text-lg font-bold text-white">Speed Slicer</h2>
-                        <p class="text-[10px] text-slate-400">Slice 8 popping targets! Avoid bombs 💣</p>
+                        <h2 class="text-xl font-black text-amber-400 tracking-wider">2048 PUZZLE</h2>
+                        <p class="text-[10px] text-slate-300">Swipe tiles to merge! Target: <span class="text-amber-300 font-bold">128 Tile</span></p>
                     </div>
 
-                    <div id="slicer-area" class="relative w-full max-w-[300px] h-[380px] bg-slate-900 rounded-3xl overflow-hidden border border-white/10 touch-none">
-                        <div class="absolute top-3 left-3 bg-slate-950/80 px-3 py-1 rounded-full text-xs font-bold text-blue-400 border border-white/10 z-10">
-                            Sliced: <span id="slicer-score">0</span> / 8
-                        </div>
+                    <div class="w-[290px] h-[290px] bg-amber-900/60 rounded-2xl p-2 grid grid-cols-4 gap-2 border-2 border-amber-700/50 shadow-2xl relative" id="grid-2048">
+                        <!-- Tiles generated dynamically -->
                     </div>
 
-                    <div class="text-[11px] text-slate-400 font-semibold">Swipe across targets to slice</div>
+                    <!-- Directional D-Pad Controls for Touch/Mobile -->
+                    <div class="grid grid-cols-3 gap-1.5 w-[180px]">
+                        <div></div>
+                        <button onclick="move2048('up')" class="py-2 rounded-xl bg-slate-800 text-amber-400 font-bold border border-white/10 active:scale-90">▲</button>
+                        <div></div>
+                        <button onclick="move2048('left')" class="py-2 rounded-xl bg-slate-800 text-amber-400 font-bold border border-white/10 active:scale-90">◀</button>
+                        <button onclick="move2048('down')" class="py-2 rounded-xl bg-slate-800 text-amber-400 font-bold border border-white/10 active:scale-90">▼</button>
+                        <button onclick="move2048('right')" class="py-2 rounded-xl bg-slate-800 text-amber-400 font-bold border border-white/10 active:scale-90">▶</button>
+                    </div>
                 </div>
             `;
 
-            let score = 0;
-            const area = document.getElementById('slicer-area');
+            let board = Array(4).fill(null).map(() => Array(4).fill(0));
 
-            function spawnTarget() {
-                if (score >= 8) return;
+            function spawnTile() {
+                let empty = [];
+                for (let r = 0; r < 4; r++) {
+                    for (let c = 0; c < 4; c++) {
+                        if (board[r][c] === 0) empty.push({ r, c });
+                    }
+                }
+                if (empty.length > 0) {
+                    let spot = empty[Math.floor(Math.random() * empty.length)];
+                    board[spot.r][spot.c] = Math.random() < 0.9 ? 2 : 4;
+                }
+            }
 
-                const isBomb = Math.random() < 0.25;
-                const el = document.createElement('div');
-                el.className = 'absolute text-4xl cursor-pointer transition-transform active:scale-75 select-none animate-bounce';
-                el.innerText = isBomb ? '💣' : ['🍉', '🍊', '🍎', '🍍'][Math.floor(Math.random() * 4)];
+            const tileColors = {
+                0: 'bg-amber-950/40 text-transparent',
+                2: 'bg-amber-100 text-slate-800 font-bold text-lg',
+                4: 'bg-amber-200 text-slate-800 font-bold text-lg',
+                8: 'bg-orange-400 text-white font-bold text-lg',
+                16: 'bg-orange-500 text-white font-bold text-lg',
+                32: 'bg-rose-500 text-white font-bold text-lg',
+                64: 'bg-red-600 text-white font-bold text-lg',
+                128: 'bg-yellow-400 text-slate-900 font-extrabold text-lg shadow-lg',
+                256: 'bg-yellow-300 text-slate-900 font-extrabold text-xl shadow-xl'
+            };
 
-                const maxX = area.clientWidth - 50;
-                const maxY = area.clientHeight - 80;
-                el.style.left = Math.max(10, Math.random() * maxX) + 'px';
-                el.style.top = Math.max(40, Math.random() * maxY) + 'px';
+            function draw2048() {
+                const gridEl = document.getElementById('grid-2048');
+                if (!gridEl) return;
+                gridEl.innerHTML = '';
 
-                function slice() {
-                    if (isBomb) {
-                        playSound('fail');
-                        renderGame4_FruitSlicer();
+                for (let r = 0; r < 4; r++) {
+                    for (let c = 0; c < 4; c++) {
+                        const val = board[r][c];
+                        const tile = document.createElement('div');
+                        tile.className = `rounded-xl flex items-center justify-center transition-all duration-150 ${tileColors[val] || 'bg-yellow-400 text-white font-bold text-xl'}`;
+                        tile.innerText = val > 0 ? val : '';
+                        gridEl.appendChild(tile);
+
+                        if (val >= 128) {
+                            setTimeout(() => onGameWin(), 300);
+                        }
+                    }
+                }
+            }
+
+            window.move2048 = function(dir) {
+                playSound('tap');
+                let moved = false;
+
+                function slide(row) {
+                    let arr = row.filter(val => val);
+                    for (let i = 0; i < arr.length - 1; i++) {
+                        if (arr[i] === arr[i + 1]) {
+                            arr[i] *= 2;
+                            playSound('score');
+                            arr[i + 1] = 0;
+                        }
+                    }
+                    arr = arr.filter(val => val);
+                    while (arr.length < 4) arr.push(0);
+                    return arr;
+                }
+
+                for (let i = 0; i < 4; i++) {
+                    let row;
+                    if (dir === 'left' || dir === 'right') {
+                        row = board[i].slice();
+                        if (dir === 'right') row.reverse();
+                        let newRow = slide(row);
+                        if (dir === 'right') newRow.reverse();
+                        if (JSON.stringify(board[i]) !== JSON.stringify(newRow)) moved = true;
+                        board[i] = newRow;
                     } else {
-                        score++;
-                        playSound('score');
-                        document.getElementById('slicer-score').innerText = score;
-                        area.removeChild(el);
-                        if (score >= 8) {
-                            onGameWin();
-                        } else {
-                            setTimeout(spawnTarget, 300);
+                        row = [board[0][i], board[1][i], board[2][i], board[3][i]];
+                        if (dir === 'down') row.reverse();
+                        let newRow = slide(row);
+                        if (dir === 'down') newRow.reverse();
+                        for (let r = 0; r < 4; r++) {
+                            if (board[r][i] !== newRow[r]) moved = true;
+                            board[r][i] = newRow[r];
                         }
                     }
                 }
 
-                el.addEventListener('pointerenter', slice);
-                el.addEventListener('pointerdown', slice);
-                area.appendChild(el);
+                if (moved) {
+                    spawnTile();
+                    draw2048();
+                }
+            };
 
-                // Auto despawn after 1.8s
-                setTimeout(() => {
-                    if (area.contains(el)) {
-                        area.removeChild(el);
-                        spawnTarget();
-                    }
-                }, 1800);
-            }
-
-            spawnTarget();
+            spawnTile();
+            spawnTile();
+            draw2048();
         }
 
 
         // ==========================================
-        // GAME 5: CYBER RUNNER
+        // GAME 3: TETRIS (EXACT REPLICA)
         // ==========================================
-        function renderGame5_CyberRunner() {
+        function renderGame3_Tetris() {
             const container = document.getElementById('game-screen');
             container.innerHTML = `
-                <div class="w-full h-full flex flex-col items-center justify-between py-2">
+                <div class="w-full h-full flex flex-col items-center justify-between py-1 select-none">
                     <div class="text-center">
-                        <h2 class="text-lg font-bold text-white">Cyber Runner</h2>
-                        <p class="text-[10px] text-slate-400">Tap Left/Right to switch lanes & dodge obstacles!</p>
+                        <h2 class="text-sm font-pixel text-cyan-400">TETRIS</h2>
+                        <p class="text-[10px] text-slate-300">Clear 2 lines to win stage!</p>
                     </div>
 
-                    <div class="relative w-full max-w-[300px] h-[380px] bg-slate-900 rounded-3xl overflow-hidden border border-white/10" id="runner-area">
-                        <canvas id="runner-canvas" width="300" height="380" class="w-full h-full"></canvas>
-                        <div class="absolute top-3 left-3 bg-slate-950/80 px-3 py-1 rounded-full text-xs font-bold text-blue-400 border border-white/10">
-                            Distance: <span id="runner-score">0</span> / 120m
+                    <div class="relative flex space-x-2 items-center">
+                        <div class="w-[180px] h-[320px] bg-slate-950 rounded-xl border-2 border-slate-700 overflow-hidden shadow-2xl">
+                            <canvas id="tetris-canvas" width="180" height="320" class="w-full h-full"></canvas>
+                        </div>
+
+                        <div class="flex flex-col space-y-3 text-xs">
+                            <div class="ios-glass p-2 rounded-xl text-center">
+                                <div class="text-[9px] text-slate-400">LINES</div>
+                                <div id="tetris-lines" class="font-pixel text-yellow-400 text-sm">0/2</div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="flex space-x-4 w-full max-w-[300px]">
-                        <button id="btn-left" class="flex-1 py-3 bg-slate-800 text-white font-bold rounded-2xl border border-white/10 active:scale-95">◀ Left</button>
-                        <button id="btn-right" class="flex-1 py-3 bg-slate-800 text-white font-bold rounded-2xl border border-white/10 active:scale-95">Right ▶</button>
+                    <!-- Controls -->
+                    <div class="flex space-x-2 w-full max-w-[280px]">
+                        <button onclick="tetrisControl('left')" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-cyan-400 font-bold active:scale-90 border border-white/10">◀</button>
+                        <button onclick="tetrisControl('rotate')" class="flex-1 py-2.5 rounded-xl bg-cyan-600 text-white font-bold active:scale-90 shadow">↻</button>
+                        <button onclick="tetrisControl('right')" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-cyan-400 font-bold active:scale-90 border border-white/10">▶</button>
+                        <button onclick="tetrisControl('drop')" class="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white font-bold active:scale-90 shadow">▼</button>
                     </div>
                 </div>
             `;
 
-            const canvas = document.getElementById('runner-canvas');
+            const canvas = document.getElementById('tetris-canvas');
             const ctx = canvas.getContext('2d');
-            const lanes = [50, 150, 250];
-            let currentLane = 1; // Center
-            let obstacles = [], score = 0, loop, frame = 0;
+            const cols = 10, rows = 20, blockSize = 18;
+            let board = Array(rows).fill(null).map(() => Array(cols).fill(0));
+            let linesCleared = 0;
 
-            document.getElementById('btn-left').onclick = () => {
-                if (currentLane > 0) currentLane--;
-                playSound('tap');
-            };
-            document.getElementById('btn-right').onclick = () => {
-                if (currentLane < 2) currentLane++;
-                playSound('tap');
-            };
+            const shapes = [
+                [[1, 1, 1, 1]], // I
+                [[1, 1, 1], [0, 1, 0]], // T
+                [[1, 1, 0], [0, 1, 1]], // Z
+                [[0, 1, 1], [1, 1, 0]], // S
+                [[1, 1], [1, 1]], // O
+                [[1, 0, 0], [1, 1, 1]], // J
+                [[0, 0, 1], [1, 1, 1]]  // L
+            ];
+            const colors = ['#06b6d4', '#a855f7', '#ef4444', '#10b981', '#eab308', '#3b82f6', '#f97316'];
 
-            loop = setInterval(() => {
-                frame++;
-                score++;
-                document.getElementById('runner-score').innerText = `${score}m`;
+            let current = spawnPiece();
 
-                if (score >= 120) {
-                    clearInterval(loop);
-                    onGameWin();
-                    return;
+            function spawnPiece() {
+                const idx = Math.floor(Math.random() * shapes.length);
+                return {
+                    shape: shapes[idx],
+                    color: colors[idx],
+                    x: 3,
+                    y: 0
+                };
+            }
+
+            function validMove(piece, offX, offY, newShape) {
+                const s = newShape || piece.shape;
+                for (let r = 0; r < s.length; r++) {
+                    for (let c = 0; c < s[r].length; c++) {
+                        if (s[r][c]) {
+                            let newX = piece.x + c + offX;
+                            let newY = piece.y + r + offY;
+                            if (newX < 0 || newX >= cols || newY >= rows) return false;
+                            if (newY >= 0 && board[newY][newX]) return false;
+                        }
+                    }
                 }
+                return true;
+            }
 
-                if (frame % 35 === 0) {
-                    obstacles.push({ lane: Math.floor(Math.random() * 3), y: -30 });
+            function merge() {
+                current.shape.forEach((row, r) => {
+                    row.forEach((val, c) => {
+                        if (val) {
+                            if (current.y + r < 0) {
+                                renderGame3_Tetris(); // Reset
+                                return;
+                            }
+                            board[current.y + r][current.x + c] = current.color;
+                        }
+                    });
+                });
+
+                // Clear Lines
+                for (let r = rows - 1; r >= 0; r--) {
+                    if (board[r].every(cell => cell !== 0)) {
+                        board.splice(r, 1);
+                        board.unshift(Array(cols).fill(0));
+                        linesCleared++;
+                        playSound('score');
+                        document.getElementById('tetris-lines').innerText = `${linesCleared}/2`;
+                        r++;
+                        if (linesCleared >= 2) {
+                            onGameWin();
+                            return;
+                        }
+                    }
                 }
+                current = spawnPiece();
+            }
 
-                ctx.fillStyle = '#0f172a';
+            window.tetrisControl = function(act) {
+                playSound('tap');
+                if (act === 'left' && validMove(current, -1, 0)) current.x--;
+                if (act === 'right' && validMove(current, 1, 0)) current.x++;
+                if (act === 'drop') {
+                    while (validMove(current, 0, 1)) current.y++;
+                    merge();
+                }
+                if (act === 'rotate') {
+                    const rotated = current.shape[0].map((_, i) => current.shape.map(row => row[i]).reverse());
+                    if (validMove(current, 0, 0, rotated)) current.shape = rotated;
+                }
+                drawTetris();
+            };
+
+            function drawTetris() {
+                ctx.fillStyle = '#020617';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Draw Lane Dividers
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-                ctx.setLineDash([10, 10]);
-                ctx.beginPath();
-                ctx.moveTo(100, 0); ctx.lineTo(100, canvas.height);
-                ctx.moveTo(200, 0); ctx.lineTo(200, canvas.height);
-                ctx.stroke();
-
-                // Draw Player Car
-                ctx.font = '28px serif';
-                ctx.fillText('🏎️', lanes[currentLane] - 14, 330);
-
-                // Update Obstacles
-                for (let i = obstacles.length - 1; i >= 0; i--) {
-                    let obs = obstacles[i];
-                    obs.y += 5;
-
-                    ctx.fillText('🚧', lanes[obs.lane] - 14, obs.y);
-
-                    // Collision Check
-                    if (obs.y >= 300 && obs.y <= 340 && obs.lane === currentLane) {
-                        playSound('fail');
-                        clearInterval(loop);
-                        renderGame5_CyberRunner();
-                        return;
+                // Draw board
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        if (board[r][c]) {
+                            ctx.fillStyle = board[r][c];
+                            ctx.fillRect(c * blockSize, r * blockSize, blockSize - 1, blockSize - 1);
+                        }
                     }
-
-                    if (obs.y > canvas.height) obstacles.splice(i, 1);
                 }
+
+                // Draw current piece
+                if (current) {
+                    ctx.fillStyle = current.color;
+                    current.shape.forEach((row, r) => {
+                        row.forEach((val, c) => {
+                            if (val) {
+                                ctx.fillRect((current.x + c) * blockSize, (current.y + r) * blockSize, blockSize - 1, blockSize - 1);
+                            }
+                        });
+                    });
+                }
+            }
+
+            activeInterval = setInterval(() => {
+                if (validMove(current, 0, 1)) {
+                    current.y++;
+                } else {
+                    merge();
+                }
+                drawTetris();
+            }, 500);
+        }
+
+
+        // ==========================================
+        // GAME 4: PAC-MAN MINI (ARCADE REPLICA)
+        // ==========================================
+        function renderGame4_Pacman() {
+            const container = document.getElementById('game-screen');
+            container.innerHTML = `
+                <div class="w-full h-full flex flex-col items-center justify-between py-1 select-none">
+                    <div class="text-center">
+                        <h2 class="text-sm font-pixel text-yellow-400">PAC-MAN MINI</h2>
+                        <p class="text-[10px] text-slate-300">Eat dots & clear the maze! Score 15 dots</p>
+                    </div>
+
+                    <div class="relative w-[280px] h-[320px] bg-black rounded-xl border-2 border-blue-600 shadow-2xl p-1">
+                        <canvas id="pacman-canvas" width="280" height="320" class="w-full h-full"></canvas>
+                        <div class="absolute top-2 left-2 text-[10px] font-pixel text-white">
+                            DOTS: <span id="pac-dots" class="text-yellow-400">0</span>/15
+                        </div>
+                    </div>
+
+                    <!-- D-Pad -->
+                    <div class="grid grid-cols-3 gap-1 w-[160px]">
+                        <div></div>
+                        <button onclick="movePac('up')" class="py-2 bg-slate-800 text-yellow-400 font-bold rounded-lg active:scale-90">▲</button>
+                        <div></div>
+                        <button onclick="movePac('left')" class="py-2 bg-slate-800 text-yellow-400 font-bold rounded-lg active:scale-90">◀</button>
+                        <button onclick="movePac('down')" class="py-2 bg-slate-800 text-yellow-400 font-bold rounded-lg active:scale-90">▼</button>
+                        <button onclick="movePac('right')" class="py-2 bg-slate-800 text-yellow-400 font-bold rounded-lg active:scale-90">▶</button>
+                    </div>
+                </div>
+            `;
+
+            const canvas = document.getElementById('pacman-canvas');
+            const ctx = canvas.getContext('2d');
+            let pacX = 140, pacY = 200, dx = 0, dy = 0, mouth = 0.2;
+            let dotsEaten = 0;
+
+            let dots = [];
+            for (let x = 30; x < 260; x += 30) {
+                for (let y = 40; y < 280; y += 30) {
+                    dots.push({ x, y, active: true });
+                }
+            }
+
+            window.movePac = function(dir) {
+                playSound('tap');
+                if (dir === 'up') { dx = 0; dy = -2; }
+                if (dir === 'down') { dx = 0; dy = 2; }
+                if (dir === 'left') { dx = -2; dy = 0; }
+                if (dir === 'right') { dx = 2; dy = 0; }
+            };
+
+            activeInterval = setInterval(() => {
+                pacX += dx;
+                pacY += dy;
+
+                // Bounds
+                if (pacX < 15) pacX = 15;
+                if (pacX > 265) pacX = 265;
+                if (pacY < 30) pacY = 30;
+                if (pacY > 290) pacY = 290;
+
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Draw Dots
+                dots.forEach(d => {
+                    if (d.active) {
+                        ctx.fillStyle = '#ffb8ae';
+                        ctx.beginPath();
+                        ctx.arc(d.x, d.y, 3, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        // Eat dot
+                        if (Math.hypot(pacX - d.x, pacY - d.y) < 12) {
+                            d.active = false;
+                            dotsEaten++;
+                            playSound('score');
+                            document.getElementById('pac-dots').innerText = dotsEaten;
+                            if (dotsEaten >= 15) {
+                                onGameWin();
+                            }
+                        }
+                    }
+                });
+
+                // Draw Pacman
+                ctx.fillStyle = '#ffff00';
+                ctx.beginPath();
+                ctx.arc(pacX, pacY, 12, mouth, Math.PI * 2 - mouth);
+                ctx.lineTo(pacX, pacY);
+                ctx.fill();
+
             }, 1000 / 60);
         }
 
 
         // ==========================================
-        // GAME 6: BRICK BREAKER
+        // GAME 5: BRICK BREAKER / BREAKOUT
         // ==========================================
-        function renderGame6_BrickBreaker() {
+        function renderGame5_Breakout() {
             const container = document.getElementById('game-screen');
             container.innerHTML = `
-                <div class="w-full h-full flex flex-col items-center justify-between py-2">
+                <div class="w-full h-full flex flex-col items-center justify-between py-2 select-none">
                     <div class="text-center">
-                        <h2 class="text-lg font-bold text-white">Brick Breaker</h2>
-                        <p class="text-[10px] text-slate-400">Drag paddle to bounce ball & destroy bricks!</p>
+                        <h2 class="text-sm font-pixel text-rose-400">BREAKOUT</h2>
+                        <p class="text-[10px] text-slate-300">Clear 10 bricks to win stage!</p>
                     </div>
 
-                    <div class="relative w-full max-w-[300px] h-[380px] bg-slate-900 rounded-3xl overflow-hidden border border-white/10 touch-none" id="breaker-area">
-                        <canvas id="breaker-canvas" width="300" height="380" class="w-full h-full"></canvas>
+                    <div class="relative w-[290px] h-[360px] bg-slate-950 rounded-2xl border-2 border-slate-700 shadow-2xl overflow-hidden touch-none" id="breakout-area">
+                        <canvas id="breakout-canvas" width="290" height="360" class="w-full h-full"></canvas>
+                        <div class="absolute top-2 left-2 text-[10px] font-pixel text-white">
+                            BRICKS: <span id="brk-score" class="text-rose-400">0</span>/10
+                        </div>
                     </div>
 
-                    <div class="text-[11px] text-slate-400 font-semibold">Slide finger across screen to move paddle</div>
+                    <div class="text-[11px] text-slate-400 font-semibold">Slide finger to control paddle</div>
                 </div>
             `;
 
-            const canvas = document.getElementById('breaker-canvas');
+            const canvas = document.getElementById('breakout-canvas');
             const ctx = canvas.getContext('2d');
 
-            let paddleX = 110, paddleW = 80;
-            let ballX = 150, ballY = 250, dx = 3, dy = -3;
-            let bricks = [], rows = 3, cols = 5, loop;
+            let paddleX = 105, paddleW = 80;
+            let ballX = 145, ballY = 240, dx = 3, dy = -3;
+            let bricksCleared = 0;
 
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < cols; c++) {
-                    bricks.push({ x: c * 58 + 10, y: r * 25 + 40, w: 50, h: 18, status: 1 });
+            let bricks = [];
+            for (let r = 0; r < 4; r++) {
+                for (let c = 0; c < 5; c++) {
+                    bricks.push({ x: c * 54 + 12, y: r * 22 + 40, w: 48, h: 16, active: true });
                 }
             }
 
@@ -1144,63 +1218,210 @@
                 paddleX = clientX - rect.left - (paddleW / 2);
                 paddleX = Math.max(0, Math.min(canvas.width - paddleW, paddleX));
             }
-
             canvas.parentElement.addEventListener('pointermove', movePaddle);
 
-            loop = setInterval(() => {
+            activeInterval = setInterval(() => {
                 ballX += dx;
                 ballY += dy;
 
-                // Wall Collisions
                 if (ballX + dx > canvas.width - 8 || ballX + dx < 8) dx = -dx;
                 if (ballY + dy < 8) dy = -dy;
 
-                // Paddle Collision
-                if (ballY + dy > 340 && ballX >= paddleX && ballX <= paddleX + paddleW) {
+                // Paddle bounce
+                if (ballY + dy > 320 && ballX >= paddleX && ballX <= paddleX + paddleW) {
                     playSound('tap');
                     dy = -dy;
                 }
 
-                // Bottom Fail
+                // Game Over
                 if (ballY > canvas.height) {
                     playSound('fail');
-                    clearInterval(loop);
-                    renderGame6_BrickBreaker();
+                    renderGame5_Breakout();
                     return;
                 }
 
                 ctx.fillStyle = '#0f172a';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Draw Paddle
-                ctx.fillStyle = '#3b82f6';
-                ctx.fillRect(paddleX, 350, paddleW, 12);
-
-                // Draw Ball
-                ctx.beginPath();
-                ctx.arc(ballX, ballY, 8, 0, Math.PI * 2);
+                // Paddle
                 ctx.fillStyle = '#f43f5e';
+                ctx.fillRect(paddleX, 328, paddleW, 12);
+
+                // Ball
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(ballX, ballY, 6, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Draw Bricks & Check Hit
-                let activeBricks = 0;
+                // Bricks
                 bricks.forEach(b => {
-                    if (b.status === 1) {
-                        activeBricks++;
+                    if (b.active) {
+                        ctx.fillStyle = '#fb7185';
+                        ctx.fillRect(b.x, b.y, b.w, b.h);
+
                         if (ballX > b.x && ballX < b.x + b.w && ballY > b.y && ballY < b.y + b.h) {
                             dy = -dy;
-                            b.status = 0;
+                            b.active = false;
+                            bricksCleared++;
                             playSound('score');
+                            document.getElementById('brk-score').innerText = bricksCleared;
+                            if (bricksCleared >= 10) {
+                                onGameWin();
+                            }
                         }
-                        ctx.fillStyle = '#10b981';
-                        ctx.fillRect(b.x, b.y, b.w, b.h);
                     }
                 });
 
-                if (activeBricks === 0) {
-                    clearInterval(loop);
-                    onGameWin();
+            }, 1000 / 60);
+        }
+
+
+        // ==========================================
+        // GAME 6: CHROME DINO (ULTIMATE CHAOTIC FINALE)
+        // ==========================================
+        function renderGame6_ChromeDinoChaos() {
+            const container = document.getElementById('game-screen');
+            container.innerHTML = `
+                <div class="w-full h-full flex flex-col items-center justify-between py-1 select-none">
+                    <div class="text-center">
+                        <h2 class="text-xs font-pixel text-red-500 animate-pulse">🔥 CHROME DINO CHAOS 🔥</h2>
+                        <p class="text-[9px] text-slate-300">Survive 150m! Dodge Meteors & Evil Heart!</p>
+                    </div>
+
+                    <div class="relative w-[300px] h-[360px] bg-slate-900 rounded-2xl border-2 border-red-500/50 shadow-2xl overflow-hidden cursor-pointer" id="dino-area">
+                        <canvas id="dino-canvas" width="300" height="360" class="w-full h-full"></canvas>
+                        
+                        <div class="absolute top-2 left-2 bg-slate-950/90 px-3 py-1 rounded-full text-[10px] font-pixel text-emerald-400 border border-white/10">
+                            DIST: <span id="dino-score">0</span>/150m
+                        </div>
+
+                        <div id="slow-warning" class="absolute top-10 left-1/2 -translate-x-1/2 bg-yellow-500/90 text-slate-950 font-bold text-[9px] px-3 py-1 rounded-full hidden animate-bounce">
+                            ⚠️ SLOWED DOWN BY METEOR!
+                        </div>
+                    </div>
+
+                    <div class="text-[11px] text-slate-400 font-semibold">Tap to Jump T-Rex!</div>
+                </div>
+            `;
+
+            const canvas = document.getElementById('dino-canvas');
+            const ctx = canvas.getContext('2d');
+
+            let dinoY = 280, dinoVy = 0, gravity = 0.55, isJumping = false;
+            let distance = 0, speed = 3.5;
+            let meteors = [], cacti = [], chaserX = -40;
+            let slowTimer = 0;
+
+            function jump() {
+                if (!isJumping) {
+                    playSound('tap');
+                    dinoVy = -10.5;
+                    isJumping = true;
                 }
+            }
+            canvas.parentElement.addEventListener('pointerdown', jump);
+
+            activeInterval = setInterval(() => {
+                distance++;
+                document.getElementById('dino-score').innerText = distance;
+
+                if (distance >= 150) {
+                    onGameWin();
+                    return;
+                }
+
+                // Handle Slowdown
+                if (slowTimer > 0) {
+                    slowTimer--;
+                    speed = 1.8;
+                    document.getElementById('slow-warning').classList.remove('hidden');
+                    chaserX += 0.8; // Chaser catches up!
+                } else {
+                    speed = 3.8;
+                    document.getElementById('slow-warning').classList.add('hidden');
+                    chaserX = Math.max(-50, chaserX - 0.3);
+                }
+
+                // Jump Physics
+                dinoVy += gravity;
+                dinoY += dinoVy;
+                if (dinoY >= 280) {
+                    dinoY = 280;
+                    isJumping = false;
+                }
+
+                // Spawn Cacti
+                if (Math.random() < 0.02) {
+                    cacti.push({ x: canvas.width, w: 18, h: 32 });
+                }
+
+                // Spawn Meteors
+                if (Math.random() < 0.025) {
+                    const isRed = Math.random() < 0.15; // 15% chance deadly red meteor
+                    meteors.push({ x: Math.random() * canvas.width, y: -20, vy: 5, isRed });
+                }
+
+                ctx.fillStyle = '#0f172a';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Ground
+                ctx.strokeStyle = '#64748b';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(0, 310);
+                ctx.lineTo(canvas.width, 310);
+                ctx.stroke();
+
+                // Draw T-Rex
+                ctx.fillStyle = '#e2e8f0';
+                ctx.fillRect(40, dinoY - 24, 20, 24); // Body
+                ctx.fillRect(52, dinoY - 32, 12, 12); // Head
+
+                // Draw Evil Crimson Heart Chaser
+                ctx.font = '32px serif';
+                ctx.fillText('💔', chaserX, 290);
+
+                // Chaser Catch
+                if (chaserX >= 20) {
+                    playSound('boom');
+                    renderGame6_ChromeDinoChaos(); // Game Over
+                    return;
+                }
+
+                // Cacti Collision
+                for (let i = cacti.length - 1; i >= 0; i--) {
+                    let c = cacti[i];
+                    c.x -= speed;
+                    ctx.fillStyle = '#22c55e';
+                    ctx.fillRect(c.x, 310 - c.h, c.w, c.h);
+
+                    if (c.x < 60 && c.x + c.w > 40 && dinoY >= 310 - c.h) {
+                        slowTimer = 60; // Slow down!
+                    }
+                }
+
+                // Meteors Collision
+                for (let i = meteors.length - 1; i >= 0; i--) {
+                    let m = meteors[i];
+                    m.y += m.vy;
+
+                    ctx.font = '20px serif';
+                    ctx.fillText(m.isRed ? '☄️' : '💥', m.x, m.y);
+
+                    // Meteor hits Dino
+                    if (Math.hypot(m.x - 50, m.y - dinoY) < 22) {
+                        if (m.isRed) {
+                            playSound('boom');
+                            renderGame6_ChromeDinoChaos(); // Deadly instant explosion restart
+                            return;
+                        } else {
+                            slowTimer = 80;
+                            playSound('fail');
+                            meteors.splice(i, 1);
+                        }
+                    }
+                }
+
             }, 1000 / 60);
         }
 
