@@ -953,7 +953,10 @@
                 if (act === 'left' && validMove(current, -1, 0)) current.x--;
                 if (act === 'right' && validMove(current, 1, 0)) current.x++;
                 if (act === 'drop') {
-                    while (validMove(current, 0, 1)) current.y++;
+                    // Hard drop: step down unit by unit until piece hits another block or bottom
+                    while (validMove(current, 0, 1)) {
+                        current.y++;
+                    }
                     merge();
                 }
                 if (act === 'rotate') {
