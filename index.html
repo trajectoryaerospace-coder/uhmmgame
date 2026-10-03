@@ -97,7 +97,7 @@
         }
 
         .tilt-card {
-            transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, opacity 0.3s ease;
+            transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease;
             will-change: transform;
         }
 
@@ -128,7 +128,7 @@
         </div>
 
         <!-- Header -->
-        <header class="w-full px-5 py-2.5 flex justify-between items-center z-30 border-b border-white/5">
+        <header class="w-full px-5 py-2 flex justify-between items-center z-30 border-b border-white/5">
             <div class="flex items-center space-x-2">
                 <div class="w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow text-white font-bold text-xs">
                     🕹️
@@ -161,21 +161,21 @@
             <!-- HOME SCREEN -->
             <div id="home-screen" class="w-full h-full flex flex-col justify-between items-center text-center py-4">
                 <div class="my-auto flex flex-col items-center">
-                    <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-4xl shadow-2xl mb-6 border border-white/20">
+                    <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-4xl shadow-2xl mb-5 border border-white/20">
                         👾
                     </div>
                     <h1 class="text-2xl font-extrabold text-white mb-2 tracking-tight">Arcade Quest</h1>
-                    <p class="text-xs text-slate-400 max-w-[260px] leading-relaxed mb-6">
-                        Conquer 5 classic arcade challenges! Tap <span class="text-red-400 font-bold">Evil Hearts</span> live in-game to banish hazards and tilt your device for stage rewards!
+                    <p class="text-xs text-slate-400 max-w-[260px] leading-relaxed mb-5">
+                        Conquer 5 classic arcade challenges! Tap floating <span class="text-red-400 font-bold">Evil Hearts</span> live in-game to banish hazards & unlock 3D tilt award cards!
                     </p>
 
-                    <div class="ios-glass p-3 rounded-2xl w-full max-w-[280px] mb-6 flex items-center space-x-3 text-left">
+                    <div class="ios-glass p-3 rounded-2xl w-full max-w-[280px] mb-5 flex items-center space-x-3 text-left">
                         <div class="w-9 h-9 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center text-lg shrink-0">
                             🖤
                         </div>
                         <div>
-                            <div class="text-xs font-bold text-white">Live Evil Hearts</div>
-                            <div class="text-[10px] text-slate-400">Tap floating hearts directly on canvas to dispel!</div>
+                            <div class="text-xs font-bold text-white">Live Evil Hearts Hazard</div>
+                            <div class="text-[10px] text-slate-400">Tap hazard directly on canvas to dispel immediately!</div>
                         </div>
                     </div>
                 </div>
@@ -189,51 +189,40 @@
             <!-- GAME SCREEN -->
             <div id="game-screen" class="w-full h-full flex flex-col items-center justify-between hidden relative"></div>
 
-            <!-- REWARD MODAL -->
+            <!-- REWARD MODAL (Award Card Screen) -->
             <div id="tilt-reward-modal" class="absolute inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex flex-col justify-between p-5 hidden">
                 <div class="text-center pt-2">
                     <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px] uppercase tracking-wider border border-emerald-500/30">Stage Cleared!</span>
-                    <h2 class="text-lg font-bold text-white mt-1">Tilt To Choose Reward</h2>
-                    <p class="text-xs text-slate-400 mt-0.5">Tilt phone Left or Right (or use buttons below)!</p>
+                    <h2 class="text-lg font-bold text-white mt-1" id="award-modal-heading">Collectible Award Unlocked</h2>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Tilt phone or drag card in 3D to inspect your trophy!</p>
                 </div>
 
                 <div class="tilt-card-wrapper my-auto w-full flex justify-center items-center">
-                    <div id="tilt-card-element" class="tilt-card w-full max-w-[270px] h-[320px] rounded-3xl ios-glass p-5 flex flex-col justify-between items-center border-2 border-white/20 shadow-2xl relative overflow-hidden">
+                    <div id="tilt-card-element" class="tilt-card w-full max-w-[280px] h-[350px] rounded-3xl ios-glass p-4 flex flex-col justify-between items-center border-2 border-white/20 shadow-2xl relative overflow-hidden">
                         
-                        <div id="tilt-badge" class="absolute top-3 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-slate-800/80 text-white border border-white/10 shadow">
-                            CENTER (Tilt Left or Right)
+                        <div class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-500/80 text-slate-950 shadow" id="award-stage-badge">
+                            STAGE 1 AWARD
                         </div>
 
-                        <div class="my-auto flex flex-col items-center text-center w-full">
-                            <div id="card-display-emoji" class="text-6xl mb-3 drop-shadow-lg transition-transform">
-                                🎁
-                            </div>
-                            <h3 id="card-display-title" class="text-base font-bold text-white mb-1">Tilt Your Phone</h3>
-                            <p id="card-display-desc" class="text-xs text-slate-300 italic px-2">Lean Left for Option A or Right for Option B!</p>
+                        <div class="w-full h-[200px] mt-8 rounded-2xl overflow-hidden border border-white/10 bg-slate-900 flex items-center justify-center relative shadow-inner">
+                            <img id="award-display-img" src="image1.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x300/1e293b/6366f1?text=Stage+Award+Image';" alt="Award Trophy" class="w-full h-full object-cover">
                         </div>
 
-                        <div class="w-full bg-slate-900/80 rounded-xl p-2 border border-white/10 flex items-center justify-between text-[10px] font-mono text-slate-400">
-                            <span id="left-option-label" class="text-blue-400 font-bold">◀ OPTION A</span>
-                            <span id="gyro-angle-readout">0°</span>
-                            <span id="right-option-label" class="text-purple-400 font-bold">OPTION B ▶</span>
+                        <div class="text-center w-full px-1 my-1">
+                            <h3 id="award-display-title" class="text-sm font-bold text-white">Flappy Sky Medal</h3>
+                            <p id="award-display-desc" class="text-[10px] text-slate-300 italic">Mastered dodging pipes with swift rhythm!</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="w-full flex flex-col items-center space-y-2 pb-2">
                     <button id="enable-gyro-modal-btn" onclick="requestGyroPermission(true)" class="hidden py-1.5 px-4 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[10px] font-bold">
-                        <i class="fa-solid fa-compass mr-1"></i> Tap to Enable Gyroscope Tilting
+                        <i class="fa-solid fa-compass mr-1"></i> Tap to Enable Gyro 3D Tilt
                     </button>
-                    <div class="flex items-center space-x-2 w-full">
-                        <button onclick="confirmTiltChoice('left')" class="flex-1 py-3 rounded-xl bg-blue-600/80 hover:bg-blue-600 text-white font-bold text-xs flex items-center justify-center space-x-1 active:scale-95 transition border border-blue-400/30">
-                            <i class="fa-solid fa-arrow-left"></i>
-                            <span id="btn-label-left">Pick Left</span>
-                        </button>
-                        <button onclick="confirmTiltChoice('right')" class="flex-1 py-3 rounded-xl bg-purple-600/80 hover:bg-purple-600 text-white font-bold text-xs flex items-center justify-center space-x-1 active:scale-95 transition border border-purple-400/30">
-                            <span id="btn-label-right">Pick Right</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                    </div>
+                    <button onclick="dismissAwardModal()" class="w-full max-w-[280px] py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 font-black text-xs shadow-lg active:scale-95 transition flex items-center justify-center space-x-2">
+                        <span>Continue to Next Game</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
 
@@ -262,7 +251,7 @@
                     <button onclick="openGalleryModal()" class="w-full max-w-[280px] p-3 rounded-2xl ios-glass text-white font-bold text-xs shadow mb-6 flex items-center justify-between active:scale-95 transition">
                         <div class="flex items-center space-x-2">
                             <span class="text-lg">🖼️</span>
-                            <span>Card Album</span>
+                            <span>Award Gallery</span>
                         </div>
                         <i class="fa-solid fa-images text-xs text-slate-400"></i>
                     </button>
@@ -299,8 +288,8 @@
         <div id="gallery-modal" class="absolute inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex flex-col justify-between p-5 hidden">
             <div class="flex justify-between items-center mb-3">
                 <div>
-                    <h3 class="text-base font-bold text-white">Card Collection</h3>
-                    <p class="text-[10px] text-slate-400">Chosen vs Missed Rewards</p>
+                    <h3 class="text-base font-bold text-white">Award Collection</h3>
+                    <p class="text-[10px] text-slate-400">Trophies Earned Across Stages</p>
                 </div>
                 <button onclick="closeGalleryModal()" class="w-7 h-7 rounded-full bg-white/10 text-white flex items-center justify-center text-xs font-bold">✕</button>
             </div>
@@ -379,37 +368,48 @@
         }
 
         let currentGameIndex = 0;
-        let collectedRewards = [];
+        let collectedAwards = [];
         let gyroGamma = 0;
-        let tiltSelectionLocked = false;
+        let gyroBeta = 0;
         let activeAnimationFrame = null;
         let gyroActive = false;
 
-        const rewardsData = [
+        // Stage Award Cards Data (Users can easily swap image1.jpg, image2.jpg or image.jpeg)
+        const stageAwardsData = [
             {
-                game: "Flappy Bird",
-                left: { img: "🥇", title: "Golden Flapper", desc: "Winged agility badge" },
-                right: { img: "🚀", title: "Rocket Thruster", desc: "Snappy jump tech" }
+                stageName: "Stage 1: Flappy Bird",
+                badge: "STAGE 1 TROPHY",
+                title: "Sky Flapper Badge",
+                desc: "Demonstrated impeccable rhythmic flight through 10 pipe barriers!",
+                imgSrc: "image1.jpg"
             },
             {
-                game: "Tetris",
-                left: { img: "🧊", title: "Drop Shield", desc: "Prevents line misplacement" },
-                right: { img: "⚡", title: "T-Spin Boost", desc: "Multiplies line scores" }
+                stageName: "Stage 2: Tetris",
+                badge: "STAGE 2 TROPHY",
+                title: "Block Architect",
+                desc: "Cleared 3 full line matrices with precision block drops!",
+                imgSrc: "image2.jpg"
             },
             {
-                game: "Pac-Man",
-                left: { img: "🍒", title: "Cherry Rush", desc: "Permanent ghost slowdown" },
-                right: { img: "👻", title: "Phantom Cloak", desc: "Brief invincibility shield" }
+                stageName: "Stage 3: Pac-Man",
+                badge: "STAGE 3 TROPHY",
+                title: "Maze Runner Gold",
+                desc: "Devoured 15 pellets while neutralizing ghost hazards!",
+                imgSrc: "image3.jpg"
             },
             {
-                game: "Breakout",
-                left: { img: "🔮", title: "Plasma Multi-Ball", desc: "Duplicates active balls" },
-                right: { img: "🛡️", title: "Titan Paddle", desc: "Extends paddle width" }
+                stageName: "Stage 4: Breakout",
+                badge: "STAGE 4 TROPHY",
+                title: "Brick Breaker Crown",
+                desc: "Smashed 12 brick barriers with masterful paddle rebounds!",
+                imgSrc: "image4.jpg"
             },
             {
-                game: "Chrome Dino Chaos",
-                left: { img: "🦖", title: "Dino Crown", desc: "Apex meteor survivor badge" },
-                right: { img: "☄️", title: "Meteor Master", desc: "Chaotic realm trophy" }
+                stageName: "Stage 5: Chrome Dino Chaos",
+                badge: "STAGE 5 TROPHY",
+                title: "Apex Dino Runner",
+                desc: "Survived 100 meters of chaos, meteor showers, and live chasers!",
+                imgSrc: "image5.jpg"
             }
         ];
 
@@ -420,7 +420,7 @@
             }
         }
 
-        // --- ISSUE 2 FIX: Robust iOS & Android Gyroscope Permission Handling ---
+        // Device Orientation & Gyro Permission Logic
         function requestGyroPermission(isUserClick = false) {
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                 DeviceOrientationEvent.requestPermission()
@@ -431,7 +431,7 @@
                             document.getElementById('enable-gyro-modal-btn')?.classList.add('hidden');
                             if (isUserClick) playSound('tap');
                         } else {
-                            if (isUserClick) alert('Gyroscope access is required for tilt controls. You can also use the pick buttons!');
+                            if (isUserClick) alert('Gyroscope access is needed for 3D card tilt effects!');
                         }
                     })
                     .catch(err => {
@@ -443,112 +443,131 @@
                 document.getElementById('enable-gyro-modal-btn')?.classList.add('hidden');
                 if (isUserClick) playSound('tap');
             } else {
-                if (isUserClick) alert('Gyroscope / Device Orientation is not supported on this browser device.');
+                if (isUserClick) alert('Gyroscope is not available on this browser. You can still swipe/drag the card!');
             }
         }
 
         function handleOrientation(event) {
             let gamma = event.gamma;
+            let beta = event.beta;
             if (gamma === null || gamma === undefined) return;
 
-            // Handle screen rotation orientation offset if device held in landscape
             if (window.orientation === 90) {
                 gamma = event.beta;
+                beta = -event.gamma;
             } else if (window.orientation === -90) {
                 gamma = -event.beta;
+                beta = event.gamma;
             }
 
-            // Smooth gamma reading
-            gyroGamma = (gyroGamma * 0.6) + (gamma * 0.4);
-            updateTiltCardUI();
+            gyroGamma = (gyroGamma * 0.7) + (gamma * 0.3);
+            gyroBeta = (gyroBeta * 0.7) + (beta * 0.3);
+            update3DCardTransform();
         }
 
-        // Auto-attempt permission listener setup
         window.addEventListener('load', () => {
             if (typeof DeviceOrientationEvent === 'undefined' || typeof DeviceOrientationEvent.requestPermission !== 'function') {
                 requestGyroPermission(false);
             }
+            setupCardDragEvents();
         });
 
-        function updateTiltCardUI() {
-            const cardModal = document.getElementById('tilt-reward-modal');
-            if (!cardModal || cardModal.classList.contains('hidden') || tiltSelectionLocked) return;
+        // Touch & Mouse 3D Drag Fallback for Card Inspection
+        let isDraggingCard = false;
+        let dragStartX = 0, dragStartY = 0;
+        let manualRotY = 0, manualRotX = 0;
 
-            const card = document.getElementById('tilt-card-element');
-            const badge = document.getElementById('tilt-badge');
-            const angleReadout = document.getElementById('gyro-angle-readout');
-            
-            const clampedAngle = Math.max(-35, Math.min(35, gyroGamma));
-            if (angleReadout) angleReadout.innerText = `${Math.round(clampedAngle)}°`;
+        function setupCardDragEvents() {
+            const wrapper = document.querySelector('.tilt-card-wrapper');
+            if (!wrapper) return;
 
-            if (card) {
-                card.style.transform = `rotateY(${clampedAngle * 1.1}deg) rotateZ(${clampedAngle * 0.2}deg) translateX(${clampedAngle * 1.8}px)`;
-            }
+            const onStart = (e) => {
+                isDraggingCard = true;
+                const pt = e.touches ? e.touches[0] : e;
+                dragStartX = pt.clientX;
+                dragStartY = pt.clientY;
+            };
 
-            const data = rewardsData[currentGameIndex];
-            if (!data) return;
+            const onMove = (e) => {
+                if (!isDraggingCard) return;
+                const pt = e.touches ? e.touches[0] : e;
+                const deltaX = pt.clientX - dragStartX;
+                const deltaY = pt.clientY - dragStartY;
 
-            // Sensitivity Thresholds for Tilt (-10 and +10 degrees)
-            if (clampedAngle < -10) {
-                if (badge) {
-                    badge.innerText = "◀ OPTION A SELECTED";
-                    badge.className = "absolute top-3 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-blue-600 text-white shadow-lg animate-pulse";
-                }
-                document.getElementById('card-display-emoji').innerText = data.left.img;
-                document.getElementById('card-display-title').innerText = data.left.title;
-                document.getElementById('card-display-desc').innerText = `"${data.left.desc}"`;
+                manualRotY = Math.max(-35, Math.min(35, deltaX * 0.3));
+                manualRotX = Math.max(-35, Math.min(35, -deltaY * 0.3));
+                update3DCardTransform();
+            };
 
-                if (clampedAngle < -22) {
-                    confirmTiltChoice('left');
-                }
-            } else if (clampedAngle > 10) {
-                if (badge) {
-                    badge.innerText = "OPTION B SELECTED ▶";
-                    badge.className = "absolute top-3 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-purple-600 text-white shadow-lg animate-pulse";
-                }
-                document.getElementById('card-display-emoji').innerText = data.right.img;
-                document.getElementById('card-display-title').innerText = data.right.title;
-                document.getElementById('card-display-desc').innerText = `"${data.right.desc}"`;
+            const onEnd = () => {
+                isDraggingCard = false;
+                manualRotY = 0;
+                manualRotX = 0;
+                update3DCardTransform();
+            };
 
-                if (clampedAngle > 22) {
-                    confirmTiltChoice('right');
-                }
-            } else {
-                if (badge) {
-                    badge.innerText = "CENTER (Tilt Left or Right)";
-                    badge.className = "absolute top-3 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-slate-800/80 text-white border border-white/10 shadow";
-                }
-            }
+            wrapper.addEventListener('mousedown', onStart);
+            window.addEventListener('mousemove', onMove);
+            window.addEventListener('mouseup', onEnd);
+
+            wrapper.addEventListener('touchstart', onStart);
+            window.addEventListener('touchmove', onMove);
+            window.addEventListener('touchend', onEnd);
         }
 
-        function confirmTiltChoice(choice) {
-            if (tiltSelectionLocked) return;
-            tiltSelectionLocked = true;
-            playSound('win');
-
-            collectedRewards.push({ gameIndex: currentGameIndex, choice: choice });
+        function update3DCardTransform() {
+            const cardModal = document.getElementById('tilt-reward-modal');
+            if (!cardModal || cardModal.classList.contains('hidden')) return;
 
             const card = document.getElementById('tilt-card-element');
-            if (card) {
-                card.style.transform = choice === 'left' ? 'translateX(-180%) rotate(-25deg)' : 'translateX(180%) rotate(25deg)';
-                card.style.opacity = '0';
+            if (!card) return;
+
+            const clampedGamma = Math.max(-30, Math.min(30, gyroGamma));
+            const clampedBeta = Math.max(-30, Math.min(30, gyroBeta - 40));
+
+            const rotY = manualRotY !== 0 ? manualRotY : clampedGamma * 0.9;
+            const rotX = manualRotX !== 0 ? manualRotX : -clampedBeta * 0.6;
+
+            card.style.transform = `rotateY(${rotY}deg) rotateX(${rotX}deg)`;
+        }
+
+        function onGameWin() {
+            clearActiveGame();
+            playSound('win');
+            triggerConfetti();
+
+            const award = stageAwardsData[currentGameIndex];
+            if (award) {
+                document.getElementById('award-stage-badge').innerText = award.badge;
+                document.getElementById('award-display-title').innerText = award.title;
+                document.getElementById('award-display-desc').innerText = `"${award.desc}"`;
+                
+                const imgEl = document.getElementById('award-display-img');
+                imgEl.src = award.imgSrc;
+
+                if (!collectedAwards.includes(currentGameIndex)) {
+                    collectedAwards.push(currentGameIndex);
+                }
             }
 
-            setTimeout(() => {
-                document.getElementById('tilt-reward-modal').classList.add('hidden');
-                if (card) {
-                    card.style.transform = 'none';
-                    card.style.opacity = '1';
-                }
-                tiltSelectionLocked = false;
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function' && !gyroActive) {
+                document.getElementById('enable-gyro-modal-btn')?.classList.remove('hidden');
+            }
 
-                currentGameIndex++;
-                if (currentGameIndex < 5) {
-                    loadGame(currentGameIndex);
-                } else {
-                    showFinaleScreen();
-                }
-            }, 400);
+            document.getElementById('tilt-reward-modal').classList.remove('hidden');
+            update3DCardTransform();
+        }
+
+        function dismissAwardModal() {
+            playSound('tap');
+            document.getElementById('tilt-reward-modal').classList.add('hidden');
+            currentGameIndex++;
+
+            if (currentGameIndex < 5) {
+                loadGame(currentGameIndex);
+            } else {
+                showFinaleScreen();
+            }
         }
 
         function startArcadeJourney() {
@@ -558,7 +577,7 @@
             document.getElementById('progress-header').classList.remove('hidden');
             document.getElementById('game-screen').classList.remove('hidden');
             currentGameIndex = 0;
-            collectedRewards = [];
+            collectedAwards = [];
             loadGame(currentGameIndex);
         }
 
@@ -585,26 +604,6 @@
             }
         }
 
-        function onGameWin() {
-            clearActiveGame();
-            playSound('win');
-            triggerConfetti();
-            const data = rewardsData[currentGameIndex];
-
-            document.getElementById('btn-label-left').innerText = data.left.title;
-            document.getElementById('btn-label-right').innerText = data.right.title;
-
-            document.getElementById('card-display-emoji').innerText = '🎁';
-            document.getElementById('card-display-title').innerText = 'Tilt Your Phone';
-            document.getElementById('card-display-desc').innerText = `Tilt Left for "${data.left.title}" or Right for "${data.right.title}"!`;
-
-            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function' && !gyroActive) {
-                document.getElementById('enable-gyro-modal-btn')?.classList.remove('hidden');
-            }
-
-            document.getElementById('tilt-reward-modal').classList.remove('hidden');
-        }
-
         function showFinaleScreen() {
             clearActiveGame();
             document.getElementById('game-screen').classList.add('hidden');
@@ -617,6 +616,7 @@
             playSound('win');
             document.getElementById('grand-trophy-modal').classList.remove('hidden');
         }
+
         function closeGrandTrophyModal() {
             document.getElementById('grand-trophy-modal').classList.add('hidden');
         }
@@ -626,22 +626,19 @@
             const grid = document.getElementById('gallery-grid');
             grid.innerHTML = '';
 
-            rewardsData.forEach((data, index) => {
-                const choiceObj = collectedRewards.find(r => r.gameIndex === index);
-                const chosenSide = choiceObj ? choiceObj.choice : 'left';
-                const chosen = data[chosenSide];
-                const missedSide = chosenSide === 'left' ? 'right' : 'left';
-                const missed = data[missedSide];
+            stageAwardsData.forEach((award, index) => {
+                const isUnlocked = collectedAwards.includes(index);
 
                 const cardEl = document.createElement('div');
-                cardEl.className = "ios-glass p-3 rounded-2xl flex flex-col items-center text-center relative border border-white/10";
+                cardEl.className = "ios-glass p-2.5 rounded-2xl flex flex-col items-center text-center relative border border-white/10";
                 cardEl.innerHTML = `
-                    <span class="absolute top-2 left-2 text-[9px] bg-blue-500 text-white rounded-full px-1.5 font-bold">G${index+1}</span>
-                    <div class="text-3xl my-1">${chosen.img}</div>
-                    <div class="font-bold text-xs text-white">${chosen.title}</div>
-                    <div class="text-[9px] text-slate-400 italic">${chosen.desc}</div>
-                    <div class="mt-2 text-[8px] text-purple-300 bg-purple-950/60 border border-purple-500/20 px-2 py-0.5 rounded-full">
-                        Missed: ${missed.img} ${missed.title}
+                    <span class="absolute top-2 left-2 text-[8px] bg-blue-500 text-white rounded-full px-1.5 font-bold">STAGE ${index+1}</span>
+                    <div class="w-full h-20 my-1 rounded-xl overflow-hidden bg-slate-900 border border-white/10 flex items-center justify-center">
+                        <img src="${award.imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/200x150/1e293b/6366f1?text=Award';" class="w-full h-full object-cover ${isUnlocked ? '' : 'grayscale opacity-40'}">
+                    </div>
+                    <div class="font-bold text-[11px] text-white">${award.title}</div>
+                    <div class="text-[8px] ${isUnlocked ? 'text-emerald-400 font-semibold' : 'text-slate-500'} mt-0.5">
+                        ${isUnlocked ? 'Unlocked ✨' : 'Locked'}
                     </div>
                 `;
                 grid.appendChild(cardEl);
@@ -685,8 +682,8 @@
                         </button>
                     </div>
 
-                    <div class="relative w-full max-w-[290px] h-[380px] bg-cyan-300 rounded-2xl overflow-hidden border-2 border-slate-700 shadow-2xl">
-                        <canvas id="flappy-canvas" width="290" height="380" class="w-full h-full"></canvas>
+                    <div class="relative w-full max-w-[290px] h-[370px] bg-cyan-300 rounded-2xl overflow-hidden border-2 border-slate-700 shadow-2xl">
+                        <canvas id="flappy-canvas" width="290" height="370" class="w-full h-full"></canvas>
                         <div class="absolute top-2 left-1/2 -translate-x-1/2 bg-slate-900/80 px-3 py-0.5 rounded-full border border-white/20 text-white font-pixel text-[10px]">
                             SCORE: <span id="flappy-score" class="text-yellow-400">0</span>/10
                         </div>
@@ -702,14 +699,14 @@
             const ctx = canvas.getContext('2d');
             
             const birdX = 60;
-            let birdY = 180, velocity = 0, gravity = 0.42, jump = -6.8;
+            let birdY = 170, velocity = 0, gravity = 0.42, jump = -6.8;
             let pipes = [], score = 0, frame = 0;
             let isGameOver = false;
 
             let heart = {
                 active: false,
                 x: -30,
-                y: 180,
+                y: 170,
                 radius: 16,
                 timer: 0
             };
@@ -726,7 +723,7 @@
                         heart.active = false;
                         heart.timer = 0;
                         playSound('score');
-                        return; // Dispel heart without jump interrupt if tapped directly
+                        return;
                     }
                 }
 
@@ -742,7 +739,7 @@
                 velocity += gravity;
                 birdY += velocity;
 
-                // Evil Heart Spawn every ~4 seconds (frame % 200)
+                // Evil Heart Spawn
                 if (score >= 1 && !heart.active && frame % 180 === 0) {
                     heart.active = true;
                     heart.x = canvas.width + 20;
@@ -768,25 +765,24 @@
                 ctx.fillStyle = '#70c5ce';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // --- ISSUE 1 FIX: Accurate single-increment Pipe Passing Logic ---
                 for (let i = pipes.length - 1; i >= 0; i--) {
                     let p = pipes[i];
-                    p.x -= 2.6; // Consistent pipe speed
+                    p.x -= 2.6;
 
-                    // Draw Top Pipe
+                    // Top Pipe
                     ctx.fillStyle = '#73bf2e';
                     ctx.fillRect(p.x, 0, 44, p.topH);
                     ctx.fillStyle = '#558022';
                     ctx.fillRect(p.x - 2, p.topH - 14, 48, 14);
 
-                    // Draw Bottom Pipe
+                    // Bottom Pipe
                     const botY = p.topH + p.gap;
                     ctx.fillStyle = '#73bf2e';
                     ctx.fillRect(p.x, botY, 44, canvas.height - botY - 35);
                     ctx.fillStyle = '#558022';
                     ctx.fillRect(p.x - 2, botY, 48, 14);
 
-                    // Increment score ONLY once when the trailing edge of pipe passes bird position
+                    // Increment score when bird passes pipe
                     if (!p.passed && (p.x + 44) < birdX) {
                         p.passed = true;
                         score++;
@@ -801,7 +797,7 @@
                         }
                     }
 
-                    // Collision check with bird bounds
+                    // Collision check
                     if (
                         (birdX + 10 > p.x && birdX - 10 < p.x + 44) &&
                         (birdY - 8 < p.topH || birdY + 8 > p.topH + p.gap)
@@ -821,7 +817,7 @@
                 ctx.fillStyle = '#73bf2e';
                 ctx.fillRect(0, canvas.height - 35, canvas.width, 6);
 
-                // Render Live Evil Heart
+                // Render Evil Heart
                 if (heart.active) {
                     ctx.font = '22px serif';
                     ctx.fillText('🖤', heart.x - 11, heart.y + 8);
@@ -873,7 +869,7 @@
             activeAnimationFrame = requestAnimationFrame(loop);
         }
 
-        // GAME 2: TETRIS (Clear 3 Lines, Clean Heart & Hard Drop logic)
+        // GAME 2: TETRIS (100% Fully Visible Grid: 10 cols x 20 rows)
         function renderGame2_Tetris() {
             clearActiveGame();
 
@@ -892,8 +888,8 @@
                     </div>
 
                     <div class="relative flex space-x-2 items-center">
-                        <div class="w-[180px] h-[300px] bg-slate-950 rounded-xl border-2 border-slate-700 overflow-hidden shadow-2xl relative">
-                            <canvas id="tetris-canvas" width="180" height="300" class="w-full h-full"></canvas>
+                        <div class="w-[180px] h-[330px] bg-slate-950 rounded-xl border-2 border-slate-700 overflow-hidden shadow-2xl relative p-0 flex items-center justify-center">
+                            <canvas id="tetris-canvas" width="180" height="330" class="w-full h-full block"></canvas>
                         </div>
 
                         <div class="flex flex-col space-y-2 text-xs">
@@ -917,25 +913,33 @@
 
             const canvas = document.getElementById('tetris-canvas');
             const ctx = canvas.getContext('2d');
-            const cols = 10, rows = 20, blockSize = 18;
+            
+            // Fixed Grid Sizing Calculation:
+            // 10 columns * 16px block = 160px width (+ 10px side margins)
+            // 20 rows * 16px block = 320px height (+ 5px top/bottom padding)
+            const cols = 10, rows = 20;
+            const blockSize = 16;
+            const offsetX = 10;
+            const offsetY = 5;
+
             let board = Array(rows).fill(null).map(() => Array(cols).fill(0));
             let linesCleared = 0;
 
             const shapes = [
-                [[1, 1, 1, 1]], [[1, 1, 1], [0, 1, 0]], [[1, 1], [1, 1]], [[1, 1, 0], [0, 1, 1]]
+                [[1, 1, 1, 1]], 
+                [[1, 1, 1], [0, 1, 0]], 
+                [[1, 1], [1, 1]], 
+                [[1, 1, 0], [0, 1, 1]]
             ];
             const colors = ['#06b6d4', '#a855f7', '#eab308', '#22c55e'];
 
-            // Floating Evil Heart State separate from block piece data structure
             let floatingHeart = {
                 active: false,
                 x: 4,
-                y: 2,
-                timer: 0
+                y: 2
             };
 
             function spawnPiece() {
-                // Spawn floating evil heart hazard occasionally without mutating the piece itself
                 if (!floatingHeart.active && Math.random() < 0.28) {
                     floatingHeart.active = true;
                     floatingHeart.x = Math.floor(Math.random() * (cols - 2)) + 1;
@@ -949,16 +953,16 @@
             let current = spawnPiece();
             let dropCounter = 0;
 
-            // --- ISSUE 3 FIX: Dispel Evil Heart cleanly when tapped anywhere on canvas ---
+            // Dispel Floating Heart
             canvas.addEventListener('pointerdown', (e) => {
                 const rect = canvas.getBoundingClientRect();
                 const clickX = e.clientX - rect.left;
                 const clickY = e.clientY - rect.top;
 
                 if (floatingHeart.active) {
-                    const hPx = floatingHeart.x * blockSize + blockSize / 2;
-                    const hPy = floatingHeart.y * blockSize + blockSize / 2;
-                    if (Math.hypot(clickX - hPx, clickY - hPy) < blockSize * 1.5) {
+                    const hPx = offsetX + floatingHeart.x * blockSize + blockSize / 2;
+                    const hPy = offsetY + floatingHeart.y * blockSize + blockSize / 2;
+                    if (Math.hypot(clickX - hPx, clickY - hPy) < blockSize * 1.6) {
                         floatingHeart.active = false;
                         playSound('score');
                         drawTetris();
@@ -1012,7 +1016,6 @@
                 current = spawnPiece();
             }
 
-            // --- ISSUE 3 FIX: Clean Hard Drop logic placing only valid tetromino block shapes ---
             window.tetrisControl = function(act) {
                 playSound('tap');
                 if (act === 'left' && validMove(current, -1, 0)) current.x--;
@@ -1034,15 +1037,23 @@
                 ctx.fillStyle = '#020617';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Grid background lines
-                ctx.strokeStyle = '#1e293b';
-                ctx.lineWidth = 0.5;
+                // Playfield Border Box
+                ctx.strokeStyle = '#334155';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(offsetX - 1, offsetY - 1, cols * blockSize + 2, rows * blockSize + 2);
+
+                // Grid background cells
                 for (let r = 0; r < rows; r++) {
                     for (let c = 0; c < cols; c++) {
-                        ctx.strokeRect(c * blockSize, r * blockSize, blockSize, blockSize);
+                        const px = offsetX + c * blockSize;
+                        const py = offsetY + r * blockSize;
+
+                        ctx.strokeStyle = '#1e293b';
+                        ctx.strokeRect(px, py, blockSize, blockSize);
+
                         if (board[r][c]) {
                             ctx.fillStyle = board[r][c];
-                            ctx.fillRect(c * blockSize + 1, r * blockSize + 1, blockSize - 2, blockSize - 2);
+                            ctx.fillRect(px + 1, py + 1, blockSize - 2, blockSize - 2);
                         }
                     }
                 }
@@ -1052,17 +1063,21 @@
                     ctx.fillStyle = current.color;
                     current.shape.forEach((row, r) => {
                         row.forEach((val, c) => {
-                            if (val) {
-                                ctx.fillRect((current.x + c) * blockSize + 1, (current.y + r) * blockSize + 1, blockSize - 2, blockSize - 2);
+                            if (val && current.y + r >= 0) {
+                                const px = offsetX + (current.x + c) * blockSize;
+                                const py = offsetY + (current.y + r) * blockSize;
+                                ctx.fillRect(px + 1, py + 1, blockSize - 2, blockSize - 2);
                             }
                         });
                     });
                 }
 
-                // Render Floating Evil Heart hazard if present
+                // Render Floating Evil Heart
                 if (floatingHeart.active) {
-                    ctx.font = '14px serif';
-                    ctx.fillText('🖤', floatingHeart.x * blockSize + 1, (floatingHeart.y + 1) * blockSize - 2);
+                    ctx.font = '13px serif';
+                    const hPx = offsetX + floatingHeart.x * blockSize + 1;
+                    const hPy = offsetY + (floatingHeart.y + 1) * blockSize - 2;
+                    ctx.fillText('🖤', hPx, hPy);
                 }
             }
 
@@ -1358,7 +1373,7 @@
             activeAnimationFrame = requestAnimationFrame(loop);
         }
 
-        // GAME 5: CHROME DINO CHAOS FINALE (Run 100m)
+        // GAME 5: CHROME DINO CHAOS FINALE (Run 100m Target)
         function renderGame5_ChromeDinoChaos() {
             clearActiveGame();
 
@@ -1408,7 +1423,7 @@
                 const clickY = e.clientY - rect.top;
 
                 if (liveHeart.active && Math.hypot(clickX - liveHeart.x, clickY - liveHeart.y) < 25) {
-                    liveHeart.x = -30; // Knock back chaser
+                    liveHeart.x = -30; // Repel chaser
                     playSound('score');
                     return;
                 }
@@ -1427,7 +1442,7 @@
                 const distEl = document.getElementById('dino-score');
                 if (distEl) distEl.innerText = distance;
 
-                if (distance >= 100) {
+                if (distance >= 100) { // 100m Target
                     isGameOver = true;
                     onGameWin();
                     return;
@@ -1471,7 +1486,7 @@
                 ctx.fillRect(70, dinoY - 30, 10, 10);
 
                 if (liveHeart.active) {
-                    liveHeart.x += 0.45; // Slowly chases Dino
+                    liveHeart.x += 0.45;
                     ctx.font = '22px serif';
                     ctx.fillText('🖤', liveHeart.x, liveHeart.y);
 
