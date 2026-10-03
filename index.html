@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>iOS Phone Arcade Quest</title>
+    <title>Universal Mobile Arcade Quest</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -13,12 +13,12 @@
             theme: {
                 extend: {
                     colors: {
-                        iosBg: '#020617',
-                        iosCard: 'rgba(255, 255, 255, 0.85)',
-                        iosDarkCard: 'rgba(30, 41, 59, 0.85)',
+                        appBg: '#090d16',
+                        glassBg: 'rgba(255, 255, 255, 0.08)',
                     },
                     fontFamily: {
-                        sf: ['-apple-system', 'BlinkMacSystemFont', 'San Francisco', 'Helvetica Neue', 'sans-serif'],
+                        sans: ['Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif],
+                        pixel: ['"Press Start 2P"', 'monospace']
                     }
                 }
             }
@@ -26,15 +26,20 @@
     </script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;700;800;900&display=swap');
+
+        * {
+            box-sizing: border-box;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-            background: #020617;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #020617;
             color: #f8fafc;
             user-select: none;
             -webkit-user-select: none;
-            touch-action: manipulation;
             overflow: hidden;
         }
 
@@ -42,53 +47,11 @@
             font-family: 'Press Start 2P', monospace;
         }
 
-        .ios-glass {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .iphone-container {
-            width: 100%;
-            max-width: 410px;
-            height: 100vh;
-            max-height: 870px;
-            border-radius: 48px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 0 10px #1e293b, 0 0 0 12px #334155;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            background: #090d16;
-        }
-
-        .dynamic-island {
-            width: 110px;
-            height: 26px;
-            background-color: #000000;
-            border-radius: 20px;
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 10px;
-        }
-
-        .home-indicator {
-            width: 130px;
-            height: 5px;
-            background-color: rgba(255, 255, 255, 0.5);
-            border-radius: 10px;
-            position: absolute;
-            bottom: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 100;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
         .tilt-card-wrapper {
@@ -106,216 +69,187 @@
         }
     </style>
 </head>
-<body class="h-full flex items-center justify-center p-0 sm:p-4 bg-slate-950">
+<body class="h-full w-full flex flex-col justify-between overflow-hidden bg-slate-950">
 
-    <div class="iphone-container relative mx-auto">
-        <!-- Dynamic Island -->
-        <div class="dynamic-island shadow-lg">
-            <div class="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-800"></div>
-            <div class="w-3 h-3 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center">
-                <div class="w-1 h-1 rounded-full bg-blue-500/50"></div>
+    <!-- App Header -->
+    <header class="w-full px-4 py-3 flex justify-between items-center z-30 border-b border-white/10 bg-slate-900/90 backdrop-blur-md shrink-0">
+        <div class="flex items-center space-x-2.5">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-500 flex items-center justify-center shadow-md text-white font-bold text-sm">
+                🕹️
+            </div>
+            <div>
+                <h1 class="text-sm font-extrabold text-white tracking-wide leading-tight">Arcade Quest</h1>
+                <p class="text-[10px] text-slate-400">Mobile Edition</p>
             </div>
         </div>
-
-        <!-- iOS Status Bar -->
-        <div class="w-full pt-3 px-7 flex justify-between items-center text-[11px] font-semibold text-white/80 z-40 select-none">
-            <span id="ios-clock">09:41</span>
-            <div class="flex items-center space-x-1.5 text-xs">
-                <i class="fa-solid fa-signal"></i>
-                <i class="fa-solid fa-wifi"></i>
-                <i class="fa-solid fa-battery-full text-emerald-400"></i>
-            </div>
+        <div class="flex items-center space-x-2">
+            <button onclick="toggleAudio()" id="sound-btn" class="w-8 h-8 rounded-full glass-card flex items-center justify-center text-white text-xs active:scale-90 transition">
+                <i id="sound-icon" class="fa-solid fa-volume-high"></i>
+            </button>
+            <button onclick="requestGyroPermission(true)" id="gyro-btn" class="w-8 h-8 rounded-full glass-card flex items-center justify-center text-blue-400 text-xs active:scale-90 transition" title="Enable Gyroscope">
+                <i class="fa-solid fa-compass"></i>
+            </button>
         </div>
+    </header>
 
-        <!-- Header -->
-        <header class="w-full px-5 py-2 flex justify-between items-center z-30 border-b border-white/5">
-            <div class="flex items-center space-x-2">
-                <div class="w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow text-white font-bold text-xs">
-                    🕹️
-                </div>
-                <span class="text-xs font-bold text-white tracking-wide">Arcade Quest</span>
-            </div>
-            <div class="flex items-center space-x-2">
-                <button onclick="toggleAudio()" id="sound-btn" class="w-7 h-7 rounded-full ios-glass flex items-center justify-center text-white text-xs active:scale-90 transition">
-                    <i id="sound-icon" class="fa-solid fa-volume-high"></i>
-                </button>
-                <button onclick="requestGyroPermission(true)" id="gyro-btn" class="w-7 h-7 rounded-full ios-glass flex items-center justify-center text-blue-400 text-xs active:scale-90 transition" title="Enable Gyroscope">
-                    <i class="fa-solid fa-compass"></i>
-                </button>
-            </div>
-        </header>
-
-        <!-- Progress Header -->
-        <div id="progress-header" class="px-5 mt-2 mb-1 hidden">
-            <div class="flex justify-between items-center text-xs font-semibold mb-1">
-                <span id="game-step-title" class="text-blue-400 font-mono text-[10px]">STAGE 1/5</span>
-                <span id="game-step-name" class="text-slate-300 font-bold text-xs">Flappy Bird</span>
-            </div>
-            <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden p-0.5 border border-white/5">
-                <div id="progress-bar-fill" class="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full transition-all duration-300" style="width: 20%"></div>
-            </div>
+    <!-- Progress Header -->
+    <div id="progress-header" class="px-4 pt-3 pb-1 hidden shrink-0 max-w-md mx-auto w-full">
+        <div class="flex justify-between items-center text-xs font-semibold mb-1.5">
+            <span id="game-step-title" class="text-blue-400 font-pixel text-[9px]">STAGE 1/5</span>
+            <span id="game-step-name" class="text-slate-200 font-bold text-xs">Flappy Bird</span>
         </div>
-
-        <main class="flex-1 w-full px-4 pb-6 flex flex-col justify-center items-center relative overflow-hidden z-20">
-
-            <!-- HOME SCREEN -->
-            <div id="home-screen" class="w-full h-full flex flex-col justify-between items-center text-center py-4">
-                <div class="my-auto flex flex-col items-center">
-                    <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-4xl shadow-2xl mb-5 border border-white/20">
-                        👾
-                    </div>
-                    <h1 class="text-2xl font-extrabold text-white mb-2 tracking-tight">Arcade Quest</h1>
-                    <p class="text-xs text-slate-400 max-w-[260px] leading-relaxed mb-5">
-                        Conquer 5 classic arcade challenges! Tap floating <span class="text-red-400 font-bold">Evil Hearts</span> live in-game to banish hazards & unlock 3D tilt award cards!
-                    </p>
-
-                    <div class="ios-glass p-3 rounded-2xl w-full max-w-[280px] mb-5 flex items-center space-x-3 text-left">
-                        <div class="w-9 h-9 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center text-lg shrink-0">
-                            🖤
-                        </div>
-                        <div>
-                            <div class="text-xs font-bold text-white">Live Evil Hearts Hazard</div>
-                            <div class="text-[10px] text-slate-400">Tap hazard directly on canvas to dispel immediately!</div>
-                        </div>
-                    </div>
-                </div>
-
-                <button onclick="startArcadeJourney()" class="w-full max-w-[280px] py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm shadow-lg hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-2">
-                    <span>Start Quest</span>
-                    <i class="fa-solid fa-play text-xs"></i>
-                </button>
-            </div>
-
-            <!-- GAME SCREEN -->
-            <div id="game-screen" class="w-full h-full flex flex-col items-center justify-between hidden relative"></div>
-
-            <!-- REWARD MODAL (Award Card Screen) -->
-            <div id="tilt-reward-modal" class="absolute inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex flex-col justify-between p-5 hidden">
-                <div class="text-center pt-2">
-                    <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px] uppercase tracking-wider border border-emerald-500/30">Stage Cleared!</span>
-                    <h2 class="text-lg font-bold text-white mt-1" id="award-modal-heading">Collectible Award Unlocked</h2>
-                    <p class="text-[11px] text-slate-400 mt-0.5">Tilt phone or drag card in 3D to inspect your trophy!</p>
-                </div>
-
-                <div class="tilt-card-wrapper my-auto w-full flex justify-center items-center">
-                    <div id="tilt-card-element" class="tilt-card w-full max-w-[280px] h-[350px] rounded-3xl ios-glass p-4 flex flex-col justify-between items-center border-2 border-white/20 shadow-2xl relative overflow-hidden">
-                        
-                        <div class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-500/80 text-slate-950 shadow" id="award-stage-badge">
-                            STAGE 1 AWARD
-                        </div>
-
-                        <div class="w-full h-[200px] mt-8 rounded-2xl overflow-hidden border border-white/10 bg-slate-900 flex items-center justify-center relative shadow-inner">
-                            <img id="award-display-img" src="image1.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x300/1e293b/6366f1?text=Stage+Award+Image';" alt="Award Trophy" class="w-full h-full object-cover">
-                        </div>
-
-                        <div class="text-center w-full px-1 my-1">
-                            <h3 id="award-display-title" class="text-sm font-bold text-white">Flappy Sky Medal</h3>
-                            <p id="award-display-desc" class="text-[10px] text-slate-300 italic">Mastered dodging pipes with swift rhythm!</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="w-full flex flex-col items-center space-y-2 pb-2">
-                    <button id="enable-gyro-modal-btn" onclick="requestGyroPermission(true)" class="hidden py-1.5 px-4 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[10px] font-bold">
-                        <i class="fa-solid fa-compass mr-1"></i> Tap to Enable Gyro 3D Tilt
-                    </button>
-                    <button onclick="dismissAwardModal()" class="w-full max-w-[280px] py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 font-black text-xs shadow-lg active:scale-95 transition flex items-center justify-center space-x-2">
-                        <span>Continue to Next Game</span>
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- FINALE SCREEN -->
-            <div id="finale-screen" class="w-full h-full flex flex-col justify-between items-center text-center py-4 hidden">
-                <div class="my-auto flex flex-col items-center w-full">
-                    <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-amber-400 to-emerald-500 flex items-center justify-center text-4xl shadow-xl mb-4 border border-white/20">
-                        🏆
-                    </div>
-                    <h1 class="text-2xl font-extrabold text-white mb-1">Arcade Master!</h1>
-                    <p class="text-xs text-slate-400 max-w-[260px] mb-6">
-                        You conquered all 5 stages and banished every Evil Heart!
-                    </p>
-
-                    <button onclick="showGrandTrophyModal()" class="w-full max-w-[280px] p-4 rounded-2xl bg-gradient-to-r from-amber-500 to-emerald-500 text-slate-950 font-black text-sm shadow-xl mb-3 flex items-center justify-between active:scale-95 transition">
-                        <div class="flex items-center space-x-3">
-                            <span class="text-2xl">✨</span>
-                            <div class="text-left">
-                                <div class="text-[10px] uppercase font-extrabold text-slate-900/70">Grand Finale</div>
-                                <div class="text-sm font-black">Grand Trophy</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-xs"></i>
-                    </button>
-
-                    <button onclick="openGalleryModal()" class="w-full max-w-[280px] p-3 rounded-2xl ios-glass text-white font-bold text-xs shadow mb-6 flex items-center justify-between active:scale-95 transition">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-lg">🖼️</span>
-                            <span>Award Gallery</span>
-                        </div>
-                        <i class="fa-solid fa-images text-xs text-slate-400"></i>
-                    </button>
-                </div>
-
-                <button onclick="restartArcadeJourney()" class="w-full max-w-[280px] py-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition flex items-center justify-center space-x-2">
-                    <i class="fa-solid fa-rotate-right"></i>
-                    <span>Restart Journey</span>
-                </button>
-            </div>
-
-        </main>
-
-        <!-- GRAND TROPHY MODAL -->
-        <div id="grand-trophy-modal" class="absolute inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-5 hidden">
-            <div class="w-full max-w-[300px] ios-glass p-6 rounded-3xl border border-white/20 text-center relative flex flex-col items-center">
-                <button onclick="closeGrandTrophyModal()" class="absolute top-3 right-3 w-7 h-7 rounded-full bg-white/10 text-white flex items-center justify-center text-xs font-bold">✕</button>
-                
-                <div class="w-16 h-16 my-2 text-5xl flex items-center justify-center">
-                    👑
-                </div>
-                <h3 class="text-lg font-black text-white">Ultimate Champion</h3>
-                <p class="text-xs text-amber-400 font-semibold mb-3">5/5 Stages Mastered</p>
-                <div class="bg-white/5 p-3 rounded-xl text-left text-[11px] text-slate-300 mb-4 border border-white/5 leading-relaxed">
-                    Proven fast reflexes, swift timing, and master precision under live heart hazards!
-                </div>
-                <button onclick="triggerConfetti(); closeGrandTrophyModal();" class="w-full py-2.5 rounded-xl bg-amber-400 text-slate-950 font-black text-xs shadow-lg">
-                    🎉 Celebrate Victory!
-                </button>
-            </div>
+        <div class="w-full bg-slate-800/80 h-2 rounded-full overflow-hidden p-0.5 border border-white/10">
+            <div id="progress-bar-fill" class="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full transition-all duration-300" style="width: 20%"></div>
         </div>
+    </div>
 
-        <!-- GALLERY MODAL -->
-        <div id="gallery-modal" class="absolute inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex flex-col justify-between p-5 hidden">
-            <div class="flex justify-between items-center mb-3">
-                <div>
-                    <h3 class="text-base font-bold text-white">Award Collection</h3>
-                    <p class="text-[10px] text-slate-400">Trophies Earned Across Stages</p>
+    <!-- Main Content Container -->
+    <main class="flex-1 w-full max-w-md mx-auto px-4 py-2 flex flex-col justify-center items-center relative overflow-hidden z-20">
+
+        <!-- HOME SCREEN -->
+        <div id="home-screen" class="w-full h-full flex flex-col justify-between items-center text-center py-4 my-auto">
+            <div class="my-auto flex flex-col items-center">
+                <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-4xl shadow-2xl mb-4 border border-white/20">
+                    👾
                 </div>
-                <button onclick="closeGalleryModal()" class="w-7 h-7 rounded-full bg-white/10 text-white flex items-center justify-center text-xs font-bold">✕</button>
+                <h1 class="text-2xl font-black text-white mb-2 tracking-tight">Mobile Arcade Quest</h1>
+                <p class="text-xs text-slate-300 max-w-[280px] leading-relaxed mb-5">
+                    Conquer 5 classic arcade games built for any smartphone display! Tap live <span class="text-red-400 font-bold">Evil Hearts</span> to banish hazards & unlock 3D tilt trophies!
+                </p>
+
+                <div class="glass-card p-3.5 rounded-2xl w-full max-w-[290px] mb-4 flex items-center space-x-3 text-left">
+                    <div class="w-10 h-10 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center text-xl shrink-0">
+                        🖤
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold text-white">Live Evil Heart Hazards</div>
+                        <div class="text-[10px] text-slate-400">Tap hazard directly on canvas to dispel immediately!</div>
+                    </div>
+                </div>
             </div>
 
-            <div id="gallery-grid" class="grid grid-cols-2 gap-2.5 overflow-y-auto flex-1 my-2 pr-1"></div>
-
-            <button onclick="closeGalleryModal(); restartArcadeJourney();" class="w-full py-3 rounded-xl bg-blue-600 text-white font-bold text-xs">
-                Replay Journey
+            <button onclick="startArcadeJourney()" class="w-full max-w-[290px] py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm shadow-lg hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-2">
+                <span>Start Quest</span>
+                <i class="fa-solid fa-play text-xs"></i>
             </button>
         </div>
 
-        <div class="home-indicator"></div>
+        <!-- GAME SCREEN -->
+        <div id="game-screen" class="w-full h-full flex flex-col items-center justify-between hidden relative"></div>
+
+        <!-- REWARD MODAL (Award Card Screen) -->
+        <div id="tilt-reward-modal" class="absolute inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex flex-col justify-between p-4 hidden">
+            <div class="text-center pt-1">
+                <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px] uppercase tracking-wider border border-emerald-500/30">Stage Cleared!</span>
+                <h2 class="text-lg font-bold text-white mt-1.5" id="award-modal-heading">Collectible Award Unlocked</h2>
+                <p class="text-[11px] text-slate-400 mt-0.5">Tilt phone or drag card in 3D to inspect!</p>
+            </div>
+
+            <div class="tilt-card-wrapper my-auto w-full flex justify-center items-center">
+                <div id="tilt-card-element" class="tilt-card w-full max-w-[280px] h-[340px] rounded-3xl glass-card p-4 flex flex-col justify-between items-center border-2 border-white/20 shadow-2xl relative overflow-hidden">
+                    
+                    <div class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-400 text-slate-950 shadow" id="award-stage-badge">
+                        STAGE 1 AWARD
+                    </div>
+
+                    <div class="w-full h-[185px] mt-8 rounded-2xl overflow-hidden border border-white/10 bg-slate-900 flex items-center justify-center relative shadow-inner">
+                        <img id="award-display-img" src="image1.jpeg" onerror="this.onerror=null; this.src='https://placehold.co/400x300/1e293b/6366f1?text=Stage+Award+Trophy';" alt="Award Trophy" class="w-full h-full object-cover">
+                    </div>
+
+                    <div class="text-center w-full px-1 my-1">
+                        <h3 id="award-display-title" class="text-sm font-bold text-white">Flappy Sky Medal</h3>
+                        <p id="award-display-desc" class="text-[10px] text-slate-300 italic">Mastered dodging pipes with swift rhythm!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full flex flex-col items-center space-y-2 pb-1">
+                <button id="enable-gyro-modal-btn" onclick="requestGyroPermission(true)" class="hidden py-1.5 px-4 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[10px] font-bold">
+                    <i class="fa-solid fa-compass mr-1"></i> Tap to Enable Gyro 3D Tilt
+                </button>
+                <button onclick="dismissAwardModal()" class="w-full max-w-[280px] py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 font-black text-xs shadow-lg active:scale-95 transition flex items-center justify-center space-x-2">
+                    <span>Continue to Next Game</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- FINALE SCREEN -->
+        <div id="finale-screen" class="w-full h-full flex flex-col justify-between items-center text-center py-4 hidden">
+            <div class="my-auto flex flex-col items-center w-full">
+                <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-amber-400 to-emerald-500 flex items-center justify-center text-4xl shadow-xl mb-3 border border-white/20">
+                    🏆
+                </div>
+                <h1 class="text-2xl font-black text-white mb-1">Arcade Master!</h1>
+                <p class="text-xs text-slate-300 max-w-[270px] mb-5">
+                    You conquered all 5 stages and banished every Evil Heart!
+                </p>
+
+                <button onclick="showGrandTrophyModal()" class="w-full max-w-[280px] p-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-emerald-500 text-slate-950 font-black text-xs shadow-xl mb-3 flex items-center justify-between active:scale-95 transition">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-2xl">✨</span>
+                        <div class="text-left">
+                            <div class="text-[9px] uppercase font-extrabold text-slate-900/70">Grand Finale</div>
+                            <div class="text-sm font-black">Grand Trophy</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                </button>
+
+                <button onclick="openGalleryModal()" class="w-full max-w-[280px] p-3 rounded-2xl glass-card text-white font-bold text-xs shadow mb-5 flex items-center justify-between active:scale-95 transition">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-lg">🖼️</span>
+                        <span>Award Gallery</span>
+                    </div>
+                    <i class="fa-solid fa-images text-xs text-slate-400"></i>
+                </button>
+            </div>
+
+            <button onclick="restartArcadeJourney()" class="w-full max-w-[280px] py-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span>Restart Quest</span>
+            </button>
+        </div>
+
+    </main>
+
+    <!-- GRAND TROPHY MODAL -->
+    <div id="grand-trophy-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-5 hidden">
+        <div class="w-full max-w-[310px] glass-card p-6 rounded-3xl border border-white/20 text-center relative flex flex-col items-center">
+            <button onclick="closeGrandTrophyModal()" class="absolute top-3 right-3 w-7 h-7 rounded-full bg-white/10 text-white flex items-center justify-center text-xs font-bold">✕</button>
+            
+            <div class="w-16 h-16 my-2 text-5xl flex items-center justify-center">
+                👑
+            </div>
+            <h3 class="text-lg font-black text-white">Ultimate Champion</h3>
+            <p class="text-xs text-amber-400 font-semibold mb-3">5/5 Stages Mastered</p>
+            <div class="bg-white/5 p-3 rounded-xl text-left text-[11px] text-slate-300 mb-4 border border-white/5 leading-relaxed">
+                Proven fast reflexes, swift timing, and master precision under live heart hazards!
+            </div>
+            <button onclick="triggerConfetti(); closeGrandTrophyModal();" class="w-full py-2.5 rounded-xl bg-amber-400 text-slate-950 font-black text-xs shadow-lg">
+                🎉 Celebrate Victory!
+            </button>
+        </div>
+    </div>
+
+    <!-- GALLERY MODAL -->
+    <div id="gallery-modal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex flex-col justify-between p-5 hidden">
+        <div class="flex justify-between items-center mb-3 max-w-md mx-auto w-full">
+            <div>
+                <h3 class="text-base font-bold text-white">Award Collection</h3>
+                <p class="text-[10px] text-slate-400">Trophies Earned Across Stages</p>
+            </div>
+            <button onclick="closeGalleryModal()" class="w-7 h-7 rounded-full bg-white/10 text-white flex items-center justify-center text-xs font-bold">✕</button>
+        </div>
+
+        <div id="gallery-grid" class="grid grid-cols-2 gap-3 overflow-y-auto flex-1 my-2 pr-1 max-w-md mx-auto w-full"></div>
+
+        <button onclick="closeGalleryModal(); restartArcadeJourney();" class="w-full max-w-md mx-auto py-3 rounded-xl bg-blue-600 text-white font-bold text-xs shrink-0">
+            Replay Journey
+        </button>
     </div>
 
     <script>
-        // Clock
-        function updateClock() {
-            const now = new Date();
-            const hrs = String(now.getHours()).padStart(2, '0');
-            const mins = String(now.getMinutes()).padStart(2, '0');
-            const clockEl = document.getElementById('ios-clock');
-            if (clockEl) clockEl.innerText = `${hrs}:${mins}`;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
         // Audio Engine
         let isAudioOn = true;
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -374,42 +308,42 @@
         let activeAnimationFrame = null;
         let gyroActive = false;
 
-        // Stage Award Cards Data (Users can easily swap image1.jpg, image2.jpg or image.jpeg)
+        // Stage Award Cards Data (Users can easily swap image1.jpeg, image2.jpeg, etc.)
         const stageAwardsData = [
             {
                 stageName: "Stage 1: Flappy Bird",
                 badge: "STAGE 1 TROPHY",
                 title: "Sky Flapper Badge",
                 desc: "Demonstrated impeccable rhythmic flight through 10 pipe barriers!",
-                imgSrc: "image1.jpg"
+                imgSrc: "image1.jpeg"
             },
             {
                 stageName: "Stage 2: Tetris",
                 badge: "STAGE 2 TROPHY",
                 title: "Block Architect",
                 desc: "Cleared 3 full line matrices with precision block drops!",
-                imgSrc: "image2.jpg"
+                imgSrc: "image2.jpeg"
             },
             {
                 stageName: "Stage 3: Pac-Man",
                 badge: "STAGE 3 TROPHY",
                 title: "Maze Runner Gold",
                 desc: "Devoured 15 pellets while neutralizing ghost hazards!",
-                imgSrc: "image3.jpg"
+                imgSrc: "image3.jpeg"
             },
             {
                 stageName: "Stage 4: Breakout",
                 badge: "STAGE 4 TROPHY",
                 title: "Brick Breaker Crown",
                 desc: "Smashed 12 brick barriers with masterful paddle rebounds!",
-                imgSrc: "image4.jpg"
+                imgSrc: "image4.jpeg"
             },
             {
                 stageName: "Stage 5: Chrome Dino Chaos",
                 badge: "STAGE 5 TROPHY",
                 title: "Apex Dino Runner",
                 desc: "Survived 100 meters of chaos, meteor showers, and live chasers!",
-                imgSrc: "image5.jpg"
+                imgSrc: "image5.jpeg"
             }
         ];
 
@@ -430,8 +364,6 @@
                             gyroActive = true;
                             document.getElementById('enable-gyro-modal-btn')?.classList.add('hidden');
                             if (isUserClick) playSound('tap');
-                        } else {
-                            if (isUserClick) alert('Gyroscope access is needed for 3D card tilt effects!');
                         }
                     })
                     .catch(err => {
@@ -442,8 +374,6 @@
                 gyroActive = true;
                 document.getElementById('enable-gyro-modal-btn')?.classList.add('hidden');
                 if (isUserClick) playSound('tap');
-            } else {
-                if (isUserClick) alert('Gyroscope is not available on this browser. You can still swipe/drag the card!');
             }
         }
 
@@ -494,8 +424,8 @@
                 const deltaX = pt.clientX - dragStartX;
                 const deltaY = pt.clientY - dragStartY;
 
-                manualRotY = Math.max(-35, Math.min(35, deltaX * 0.3));
-                manualRotX = Math.max(-35, Math.min(35, -deltaY * 0.3));
+                manualRotY = Math.max(-35, Math.min(35, deltaX * 0.35));
+                manualRotX = Math.max(-35, Math.min(35, -deltaY * 0.35));
                 update3DCardTransform();
             };
 
@@ -630,14 +560,14 @@
                 const isUnlocked = collectedAwards.includes(index);
 
                 const cardEl = document.createElement('div');
-                cardEl.className = "ios-glass p-2.5 rounded-2xl flex flex-col items-center text-center relative border border-white/10";
+                cardEl.className = "glass-card p-3 rounded-2xl flex flex-col items-center text-center relative border border-white/10";
                 cardEl.innerHTML = `
-                    <span class="absolute top-2 left-2 text-[8px] bg-blue-500 text-white rounded-full px-1.5 font-bold">STAGE ${index+1}</span>
-                    <div class="w-full h-20 my-1 rounded-xl overflow-hidden bg-slate-900 border border-white/10 flex items-center justify-center">
+                    <span class="absolute top-2 left-2 text-[8px] bg-blue-500 text-white rounded-full px-2 py-0.5 font-bold">STAGE ${index+1}</span>
+                    <div class="w-full h-24 my-1 mt-4 rounded-xl overflow-hidden bg-slate-900 border border-white/10 flex items-center justify-center">
                         <img src="${award.imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/200x150/1e293b/6366f1?text=Award';" class="w-full h-full object-cover ${isUnlocked ? '' : 'grayscale opacity-40'}">
                     </div>
-                    <div class="font-bold text-[11px] text-white">${award.title}</div>
-                    <div class="text-[8px] ${isUnlocked ? 'text-emerald-400 font-semibold' : 'text-slate-500'} mt-0.5">
+                    <div class="font-bold text-[11px] text-white mt-1">${award.title}</div>
+                    <div class="text-[9px] ${isUnlocked ? 'text-emerald-400 font-semibold' : 'text-slate-500'} mt-0.5">
                         ${isUnlocked ? 'Unlocked ✨' : 'Locked'}
                     </div>
                 `;
@@ -664,32 +594,32 @@
             }
         }
 
-        // GAME 1: FLAPPY BIRD (Fast, Exactly 10 Pipes Target)
+        // GAME 1: FLAPPY BIRD
         function renderGame1_FlappyBird() {
             clearActiveGame();
 
             const container = document.getElementById('game-screen');
             container.innerHTML = `
                 <div class="w-full h-full flex flex-col items-center justify-between py-1 select-none">
-                    <div class="w-full flex items-center justify-between px-2">
+                    <div class="w-full flex items-center justify-between px-1">
                         <div>
                             <h2 class="text-xs font-pixel text-yellow-400">FLAPPY BIRD</h2>
-                            <p class="text-[9px] text-slate-300">Tap to Flap | Tap 🖤 to Dispel!</p>
+                            <p class="text-[10px] text-slate-300">Tap canvas to flap | Tap 🖤 to dispel hazard!</p>
                         </div>
-                        <button id="flappy-restart-btn" class="px-3 py-1 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
+                        <button id="flappy-restart-btn" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
                             <i class="fa-solid fa-rotate-right text-[9px]"></i>
                             <span>Restart</span>
                         </button>
                     </div>
 
-                    <div class="relative w-full max-w-[290px] h-[370px] bg-cyan-300 rounded-2xl overflow-hidden border-2 border-slate-700 shadow-2xl">
-                        <canvas id="flappy-canvas" width="290" height="370" class="w-full h-full"></canvas>
-                        <div class="absolute top-2 left-1/2 -translate-x-1/2 bg-slate-900/80 px-3 py-0.5 rounded-full border border-white/20 text-white font-pixel text-[10px]">
+                    <div class="relative w-full max-w-[320px] h-[360px] bg-cyan-300 rounded-2xl overflow-hidden border-2 border-slate-700 shadow-2xl my-auto">
+                        <canvas id="flappy-canvas" width="320" height="360" class="w-full h-full block"></canvas>
+                        <div class="absolute top-2.5 left-1/2 -translate-x-1/2 bg-slate-900/80 px-3 py-1 rounded-full border border-white/20 text-white font-pixel text-[10px]">
                             SCORE: <span id="flappy-score" class="text-yellow-400">0</span>/10
                         </div>
                     </div>
 
-                    <div class="text-[10px] text-slate-400 font-medium">Clear 10 pipe gaps to win stage!</div>
+                    <div class="text-[10px] text-slate-400 font-medium pb-1">Pass 10 pipes to clear stage</div>
                 </div>
             `;
 
@@ -698,7 +628,7 @@
             const canvas = document.getElementById('flappy-canvas');
             const ctx = canvas.getContext('2d');
             
-            const birdX = 60;
+            const birdX = 65;
             let birdY = 170, velocity = 0, gravity = 0.42, jump = -6.8;
             let pipes = [], score = 0, frame = 0;
             let isGameOver = false;
@@ -771,26 +701,26 @@
 
                     // Top Pipe
                     ctx.fillStyle = '#73bf2e';
-                    ctx.fillRect(p.x, 0, 44, p.topH);
+                    ctx.fillRect(p.x, 0, 48, p.topH);
                     ctx.fillStyle = '#558022';
-                    ctx.fillRect(p.x - 2, p.topH - 14, 48, 14);
+                    ctx.fillRect(p.x - 2, p.topH - 14, 52, 14);
 
                     // Bottom Pipe
                     const botY = p.topH + p.gap;
                     ctx.fillStyle = '#73bf2e';
-                    ctx.fillRect(p.x, botY, 44, canvas.height - botY - 35);
+                    ctx.fillRect(p.x, botY, 48, canvas.height - botY - 35);
                     ctx.fillStyle = '#558022';
-                    ctx.fillRect(p.x - 2, botY, 48, 14);
+                    ctx.fillRect(p.x - 2, botY, 52, 14);
 
-                    // Increment score when bird passes pipe
-                    if (!p.passed && (p.x + 44) < birdX) {
+                    // Score Increment
+                    if (!p.passed && (p.x + 48) < birdX) {
                         p.passed = true;
                         score++;
                         playSound('score');
                         const scoreEl = document.getElementById('flappy-score');
                         if (scoreEl) scoreEl.innerText = score;
 
-                        if (score >= 10) { // Target 10 pipes
+                        if (score >= 10) {
                             isGameOver = true;
                             onGameWin();
                             return;
@@ -799,7 +729,7 @@
 
                     // Collision check
                     if (
-                        (birdX + 10 > p.x && birdX - 10 < p.x + 44) &&
+                        (birdX + 10 > p.x && birdX - 10 < p.x + 48) &&
                         (birdY - 8 < p.topH || birdY + 8 > p.topH + p.gap)
                     ) {
                         isGameOver = true;
@@ -869,42 +799,42 @@
             activeAnimationFrame = requestAnimationFrame(loop);
         }
 
-        // GAME 2: TETRIS (100% Fully Visible Grid: 10 cols x 20 rows)
+        // GAME 2: TETRIS (Full 10x20 visible grid)
         function renderGame2_Tetris() {
             clearActiveGame();
 
             const container = document.getElementById('game-screen');
             container.innerHTML = `
                 <div class="w-full h-full flex flex-col items-center justify-between py-1 select-none">
-                    <div class="w-full flex items-center justify-between px-2">
+                    <div class="w-full flex items-center justify-between px-1">
                         <div>
                             <h2 class="text-xs font-pixel text-cyan-400">TETRIS</h2>
-                            <p class="text-[9px] text-slate-300">Clear 3 Lines | Tap 🖤 to vaporize!</p>
+                            <p class="text-[10px] text-slate-300">Clear 3 Lines | Tap 🖤 to vaporize!</p>
                         </div>
-                        <button id="tetris-restart-btn" class="px-3 py-1 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
+                        <button id="tetris-restart-btn" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
                             <i class="fa-solid fa-rotate-right text-[9px]"></i>
                             <span>Restart</span>
                         </button>
                     </div>
 
-                    <div class="relative flex space-x-2 items-center">
+                    <div class="relative flex space-x-2 items-center my-auto">
                         <div class="w-[180px] h-[330px] bg-slate-950 rounded-xl border-2 border-slate-700 overflow-hidden shadow-2xl relative p-0 flex items-center justify-center">
                             <canvas id="tetris-canvas" width="180" height="330" class="w-full h-full block"></canvas>
                         </div>
 
                         <div class="flex flex-col space-y-2 text-xs">
-                            <div class="ios-glass p-2 rounded-xl text-center">
+                            <div class="glass-card p-2.5 rounded-xl text-center">
                                 <div class="text-[8px] text-slate-400">LINES</div>
-                                <div id="tetris-lines" class="font-pixel text-yellow-400 text-xs">0/3</div>
+                                <div id="tetris-lines" class="font-pixel text-yellow-400 text-xs mt-1">0/3</div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex space-x-1.5 w-full max-w-[270px]">
-                        <button onclick="tetrisControl('left')" class="flex-1 py-2 rounded-xl bg-slate-800 text-cyan-400 font-bold active:scale-90 border border-white/10">◀</button>
-                        <button onclick="tetrisControl('rotate')" class="flex-1 py-2 rounded-xl bg-cyan-600 text-white font-bold active:scale-90 shadow">↻</button>
-                        <button onclick="tetrisControl('right')" class="flex-1 py-2 rounded-xl bg-slate-800 text-cyan-400 font-bold active:scale-90 border border-white/10">▶</button>
-                        <button onclick="tetrisControl('drop')" class="flex-1 py-2 rounded-xl bg-indigo-600 text-white font-bold active:scale-90 shadow">▼</button>
+                    <div class="flex space-x-2 w-full max-w-[290px]">
+                        <button onclick="tetrisControl('left')" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-cyan-400 font-bold text-base active:scale-90 border border-white/10 shadow">◀</button>
+                        <button onclick="tetrisControl('rotate')" class="flex-1 py-2.5 rounded-xl bg-cyan-600 text-white font-bold text-base active:scale-90 shadow">↻</button>
+                        <button onclick="tetrisControl('right')" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-cyan-400 font-bold text-base active:scale-90 border border-white/10 shadow">▶</button>
+                        <button onclick="tetrisControl('drop')" class="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-base active:scale-90 shadow">▼</button>
                     </div>
                 </div>
             `;
@@ -914,9 +844,6 @@
             const canvas = document.getElementById('tetris-canvas');
             const ctx = canvas.getContext('2d');
             
-            // Fixed Grid Sizing Calculation:
-            // 10 columns * 16px block = 160px width (+ 10px side margins)
-            // 20 rows * 16px block = 320px height (+ 5px top/bottom padding)
             const cols = 10, rows = 20;
             const blockSize = 16;
             const offsetX = 10;
@@ -953,7 +880,6 @@
             let current = spawnPiece();
             let dropCounter = 0;
 
-            // Dispel Floating Heart
             canvas.addEventListener('pointerdown', (e) => {
                 const rect = canvas.getBoundingClientRect();
                 const clickX = e.clientX - rect.left;
@@ -962,7 +888,7 @@
                 if (floatingHeart.active) {
                     const hPx = offsetX + floatingHeart.x * blockSize + blockSize / 2;
                     const hPy = offsetY + floatingHeart.y * blockSize + blockSize / 2;
-                    if (Math.hypot(clickX - hPx, clickY - hPy) < blockSize * 1.6) {
+                    if (Math.hypot(clickX - hPx, clickY - hPy) < blockSize * 1.8) {
                         floatingHeart.active = false;
                         playSound('score');
                         drawTetris();
@@ -998,7 +924,6 @@
                     });
                 });
 
-                // Clear completed lines
                 for (let r = rows - 1; r >= 0; r--) {
                     if (board[r].every(cell => cell !== 0)) {
                         board.splice(r, 1);
@@ -1037,12 +962,10 @@
                 ctx.fillStyle = '#020617';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Playfield Border Box
                 ctx.strokeStyle = '#334155';
                 ctx.lineWidth = 1;
                 ctx.strokeRect(offsetX - 1, offsetY - 1, cols * blockSize + 2, rows * blockSize + 2);
 
-                // Grid background cells
                 for (let r = 0; r < rows; r++) {
                     for (let c = 0; c < cols; c++) {
                         const px = offsetX + c * blockSize;
@@ -1058,7 +981,6 @@
                     }
                 }
 
-                // Render current active block piece
                 if (current) {
                     ctx.fillStyle = current.color;
                     current.shape.forEach((row, r) => {
@@ -1072,7 +994,6 @@
                     });
                 }
 
-                // Render Floating Evil Heart
                 if (floatingHeart.active) {
                     ctx.font = '13px serif';
                     const hPx = offsetX + floatingHeart.x * blockSize + 1;
@@ -1098,38 +1019,38 @@
             activeAnimationFrame = requestAnimationFrame(loop);
         }
 
-        // GAME 3: PAC-MAN MINI (Eat 15 Dots Target)
+        // GAME 3: PAC-MAN MINI
         function renderGame3_Pacman() {
             clearActiveGame();
 
             const container = document.getElementById('game-screen');
             container.innerHTML = `
                 <div class="w-full h-full flex flex-col items-center justify-between py-1 select-none">
-                    <div class="w-full flex items-center justify-between px-2">
+                    <div class="w-full flex items-center justify-between px-1">
                         <div>
                             <h2 class="text-xs font-pixel text-yellow-400">PAC-MAN MINI</h2>
-                            <p class="text-[9px] text-slate-300">Eat 15 Dots | Tap 🖤 to stun!</p>
+                            <p class="text-[10px] text-slate-300">Eat 15 Dots | Tap 🖤 to stun!</p>
                         </div>
-                        <button id="pac-restart-btn" class="px-3 py-1 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
+                        <button id="pac-restart-btn" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
                             <i class="fa-solid fa-rotate-right text-[9px]"></i>
                             <span>Restart</span>
                         </button>
                     </div>
 
-                    <div class="relative w-[270px] h-[290px] bg-black rounded-xl border-2 border-blue-600 shadow-2xl p-1">
-                        <canvas id="pacman-canvas" width="270" height="290" class="w-full h-full"></canvas>
-                        <div class="absolute top-2 left-2 text-[9px] font-pixel text-white">
+                    <div class="relative w-[280px] h-[300px] bg-black rounded-xl border-2 border-blue-600 shadow-2xl p-1 my-auto">
+                        <canvas id="pacman-canvas" width="280" height="300" class="w-full h-full block"></canvas>
+                        <div class="absolute top-2.5 left-2.5 text-[9px] font-pixel text-white bg-slate-900/80 px-2 py-0.5 rounded border border-white/10">
                             DOTS: <span id="pac-dots" class="text-yellow-400">0</span>/15
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-3 gap-1 w-[150px]">
+                    <div class="grid grid-cols-3 gap-1.5 w-[160px]">
                         <div></div>
-                        <button onclick="movePac('up')" class="py-1.5 bg-slate-800 text-yellow-400 font-bold rounded-lg active:scale-90">▲</button>
+                        <button onclick="movePac('up')" class="py-2 bg-slate-800 text-yellow-400 font-bold rounded-xl active:scale-90 border border-white/10">▲</button>
                         <div></div>
-                        <button onclick="movePac('left')" class="py-1.5 bg-slate-800 text-yellow-400 font-bold rounded-lg active:scale-90">◀</button>
-                        <button onclick="movePac('down')" class="py-1.5 bg-slate-800 text-yellow-400 font-bold rounded-lg active:scale-90">▼</button>
-                        <button onclick="movePac('right')" class="py-1.5 bg-slate-800 text-yellow-400 font-bold rounded-lg active:scale-90">▶</button>
+                        <button onclick="movePac('left')" class="py-2 bg-slate-800 text-yellow-400 font-bold rounded-xl active:scale-90 border border-white/10">◀</button>
+                        <button onclick="movePac('down')" class="py-2 bg-slate-800 text-yellow-400 font-bold rounded-xl active:scale-90 border border-white/10">▼</button>
+                        <button onclick="movePac('right')" class="py-2 bg-slate-800 text-yellow-400 font-bold rounded-xl active:scale-90 border border-white/10">▶</button>
                     </div>
                 </div>
             `;
@@ -1138,7 +1059,7 @@
 
             const canvas = document.getElementById('pacman-canvas');
             const ctx = canvas.getContext('2d');
-            let pacX = 135, pacY = 180, dx = 0, dy = 0;
+            let pacX = 140, pacY = 180, dx = 0, dy = 0;
             let dotsEaten = 0;
             let isGameOver = false;
 
@@ -1159,8 +1080,8 @@
             });
 
             let dots = [];
-            for (let x = 30; x < 250; x += 32) {
-                for (let y = 40; y < 260; y += 38) {
+            for (let x = 30; x < 260; x += 32) {
+                for (let y = 45; y < 270; y += 38) {
                     dots.push({ x, y, active: true });
                 }
             }
@@ -1180,9 +1101,9 @@
                 pacY += dy;
 
                 if (pacX < 15) pacX = 15;
-                if (pacX > 255) pacX = 255;
+                if (pacX > 265) pacX = 265;
                 if (pacY < 25) pacY = 25;
-                if (pacY > 265) pacY = 265;
+                if (pacY > 275) pacY = 275;
 
                 ctx.fillStyle = '#000';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1219,7 +1140,7 @@
                             playSound('score');
                             const dotsEl = document.getElementById('pac-dots');
                             if (dotsEl) dotsEl.innerText = dotsEaten;
-                            if (dotsEaten >= 15) { // 15 Dots Target
+                            if (dotsEaten >= 15) {
                                 isGameOver = true;
                                 onGameWin();
                                 return;
@@ -1240,32 +1161,32 @@
             activeAnimationFrame = requestAnimationFrame(loop);
         }
 
-        // GAME 4: BREAKOUT (Clear 12 Bricks Target)
+        // GAME 4: BREAKOUT
         function renderGame4_Breakout() {
             clearActiveGame();
 
             const container = document.getElementById('game-screen');
             container.innerHTML = `
                 <div class="w-full h-full flex flex-col items-center justify-between py-1 select-none">
-                    <div class="w-full flex items-center justify-between px-2">
+                    <div class="w-full flex items-center justify-between px-1">
                         <div>
                             <h2 class="text-xs font-pixel text-rose-400">BREAKOUT</h2>
-                            <p class="text-[9px] text-slate-300">Clear 12 Bricks | Tap 🖤 to banish!</p>
+                            <p class="text-[10px] text-slate-300">Clear 12 Bricks | Tap 🖤 to banish!</p>
                         </div>
-                        <button id="breakout-restart-btn" class="px-3 py-1 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
+                        <button id="breakout-restart-btn" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
                             <i class="fa-solid fa-rotate-right text-[9px]"></i>
                             <span>Restart</span>
                         </button>
                     </div>
 
-                    <div class="relative w-[280px] h-[330px] bg-slate-950 rounded-2xl border-2 border-slate-700 shadow-2xl overflow-hidden touch-none">
-                        <canvas id="breakout-canvas" width="280" height="330" class="w-full h-full"></canvas>
-                        <div class="absolute top-2 left-2 text-[9px] font-pixel text-white">
+                    <div class="relative w-[290px] h-[340px] bg-slate-950 rounded-2xl border-2 border-slate-700 shadow-2xl overflow-hidden touch-none my-auto">
+                        <canvas id="breakout-canvas" width="290" height="340" class="w-full h-full block"></canvas>
+                        <div class="absolute top-2.5 left-2.5 text-[9px] font-pixel text-white bg-slate-900/80 px-2 py-0.5 rounded border border-white/10">
                             BRICKS: <span id="brk-score" class="text-rose-400">0</span>/12
                         </div>
                     </div>
 
-                    <div class="text-[10px] text-slate-400 font-medium">Slide finger to move paddle</div>
+                    <div class="text-[10px] text-slate-400 font-medium pb-1">Slide finger across canvas to move paddle</div>
                 </div>
             `;
 
@@ -1274,12 +1195,12 @@
             const canvas = document.getElementById('breakout-canvas');
             const ctx = canvas.getContext('2d');
 
-            let paddleX = 90, paddleW = 85;
-            let ballX = 140, ballY = 220, dx = 2.4, dy = -2.4;
+            let paddleX = 100, paddleW = 85;
+            let ballX = 145, ballY = 220, dx = 2.4, dy = -2.4;
             let bricksCleared = 0;
             let isGameOver = false;
 
-            let floatingHeart = { x: 140, y: 110, active: true };
+            let floatingHeart = { x: 145, y: 110, active: true };
 
             canvas.addEventListener('pointerdown', (e) => {
                 const rect = canvas.getBoundingClientRect();
@@ -1295,7 +1216,7 @@
             let bricks = [];
             for (let r = 0; r < 3; r++) {
                 for (let c = 0; c < 4; c++) {
-                    bricks.push({ x: c * 64 + 14, y: r * 22 + 35, w: 58, h: 16, active: true });
+                    bricks.push({ x: c * 66 + 14, y: r * 22 + 40, w: 60, h: 16, active: true });
                 }
             }
 
@@ -1307,6 +1228,7 @@
                 paddleX = Math.max(0, Math.min(canvas.width - paddleW, paddleX));
             }
             canvas.parentElement.addEventListener('pointermove', movePaddle);
+            canvas.parentElement.addEventListener('touchmove', movePaddle);
 
             function loop() {
                 if (isGameOver) return;
@@ -1317,7 +1239,7 @@
                 if (ballX + dx > canvas.width - 6 || ballX + dx < 6) dx = -dx;
                 if (ballY + dy < 6) dy = -dy;
 
-                if (ballY + dy > 295 && ballX >= paddleX && ballX <= paddleX + paddleW) {
+                if (ballY + dy > 305 && ballX >= paddleX && ballX <= paddleX + paddleW) {
                     playSound('tap');
                     dy = -dy;
                 }
@@ -1339,7 +1261,7 @@
                 }
 
                 ctx.fillStyle = '#f43f5e';
-                ctx.fillRect(paddleX, 302, paddleW, 10);
+                ctx.fillRect(paddleX, 312, paddleW, 10);
 
                 ctx.fillStyle = '#fff';
                 ctx.beginPath();
@@ -1358,7 +1280,7 @@
                             playSound('score');
                             const brkEl = document.getElementById('brk-score');
                             if (brkEl) brkEl.innerText = bricksCleared;
-                            if (bricksCleared >= 12) { // 12 Bricks Target
+                            if (bricksCleared >= 12) {
                                 isGameOver = true;
                                 onGameWin();
                                 return;
@@ -1373,33 +1295,33 @@
             activeAnimationFrame = requestAnimationFrame(loop);
         }
 
-        // GAME 5: CHROME DINO CHAOS FINALE (Run 100m Target)
+        // GAME 5: CHROME DINO CHAOS
         function renderGame5_ChromeDinoChaos() {
             clearActiveGame();
 
             const container = document.getElementById('game-screen');
             container.innerHTML = `
                 <div class="w-full h-full flex flex-col items-center justify-between py-1 select-none">
-                    <div class="w-full flex items-center justify-between px-2">
+                    <div class="w-full flex items-center justify-between px-1">
                         <div>
                             <h2 class="text-xs font-pixel text-red-500 animate-pulse">DINO CHAOS FINALE</h2>
-                            <p class="text-[9px] text-slate-300">Run 100m | Tap 🖤 chaser to repel!</p>
+                            <p class="text-[10px] text-slate-300">Run 100m | Tap 🖤 chaser to repel!</p>
                         </div>
-                        <button id="dino-restart-btn" class="px-3 py-1 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
+                        <button id="dino-restart-btn" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
                             <i class="fa-solid fa-rotate-right text-[9px]"></i>
                             <span>Restart</span>
                         </button>
                     </div>
 
-                    <div class="relative w-[290px] h-[340px] bg-slate-900 rounded-2xl border-2 border-red-500/50 shadow-2xl overflow-hidden" id="dino-area">
-                        <canvas id="dino-canvas" width="290" height="340" class="w-full h-full"></canvas>
+                    <div class="relative w-[300px] h-[340px] bg-slate-900 rounded-2xl border-2 border-red-500/50 shadow-2xl overflow-hidden my-auto" id="dino-area">
+                        <canvas id="dino-canvas" width="300" height="340" class="w-full h-full block"></canvas>
                         
-                        <div class="absolute top-2 left-2 bg-slate-950/90 px-2.5 py-0.5 rounded-full text-[9px] font-pixel text-emerald-400 border border-white/10">
+                        <div class="absolute top-2.5 left-2.5 bg-slate-950/90 px-2.5 py-0.5 rounded-full text-[9px] font-pixel text-emerald-400 border border-white/10">
                             DIST: <span id="dino-score">0</span>/100m
                         </div>
                     </div>
 
-                    <div class="text-[10px] text-slate-400 font-medium">Tap canvas to Jump Dino</div>
+                    <div class="text-[10px] text-slate-400 font-medium pb-1">Tap canvas to Jump Dino</div>
                 </div>
             `;
 
@@ -1423,7 +1345,7 @@
                 const clickY = e.clientY - rect.top;
 
                 if (liveHeart.active && Math.hypot(clickX - liveHeart.x, clickY - liveHeart.y) < 25) {
-                    liveHeart.x = -30; // Repel chaser
+                    liveHeart.x = -30;
                     playSound('score');
                     return;
                 }
@@ -1442,7 +1364,7 @@
                 const distEl = document.getElementById('dino-score');
                 if (distEl) distEl.innerText = distance;
 
-                if (distance >= 100) { // 100m Target
+                if (distance >= 100) {
                     isGameOver = true;
                     onGameWin();
                     return;
