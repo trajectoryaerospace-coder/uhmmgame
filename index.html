@@ -109,6 +109,7 @@
 <body class="h-full flex items-center justify-center p-0 sm:p-4 bg-slate-950">
 
     <div class="iphone-container relative mx-auto">
+        <!-- Dynamic Island -->
         <div class="dynamic-island shadow-lg">
             <div class="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-800"></div>
             <div class="w-3 h-3 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center">
@@ -116,6 +117,7 @@
             </div>
         </div>
 
+        <!-- iOS Status Bar -->
         <div class="w-full pt-3 px-7 flex justify-between items-center text-[11px] font-semibold text-white/80 z-40 select-none">
             <span id="ios-clock">09:41</span>
             <div class="flex items-center space-x-1.5 text-xs">
@@ -125,6 +127,7 @@
             </div>
         </div>
 
+        <!-- Header -->
         <header class="w-full px-5 py-2.5 flex justify-between items-center z-30 border-b border-white/5">
             <div class="flex items-center space-x-2">
                 <div class="w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow text-white font-bold text-xs">
@@ -142,13 +145,14 @@
             </div>
         </header>
 
+        <!-- Progress Header -->
         <div id="progress-header" class="px-5 mt-2 mb-1 hidden">
             <div class="flex justify-between items-center text-xs font-semibold mb-1">
-                <span id="game-step-title" class="text-blue-400 font-mono text-[10px]">STAGE 1/6</span>
+                <span id="game-step-title" class="text-blue-400 font-mono text-[10px]">STAGE 1/5</span>
                 <span id="game-step-name" class="text-slate-300 font-bold text-xs">Flappy Bird</span>
             </div>
             <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden p-0.5 border border-white/5">
-                <div id="progress-bar-fill" class="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full transition-all duration-300" style="width: 16.6%"></div>
+                <div id="progress-bar-fill" class="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full transition-all duration-300" style="width: 20%"></div>
             </div>
         </div>
 
@@ -162,7 +166,7 @@
                     </div>
                     <h1 class="text-2xl font-extrabold text-white mb-2 tracking-tight">Arcade Quest</h1>
                     <p class="text-xs text-slate-400 max-w-[260px] leading-relaxed mb-6">
-                        Play 6 arcade classics! Dispel <span class="text-red-400 font-bold">Evil Hearts</span> live in-game and tilt your phone after each stage to claim rewards.
+                        Conquer 5 classic arcade challenges! Tap <span class="text-red-400 font-bold">Evil Hearts</span> live in-game to banish hazards and tilt your device for stage rewards!
                     </p>
 
                     <div class="ios-glass p-3 rounded-2xl w-full max-w-[280px] mb-6 flex items-center space-x-3 text-left">
@@ -170,14 +174,14 @@
                             🖤
                         </div>
                         <div>
-                            <div class="text-xs font-bold text-white">In-Game Evil Hearts</div>
-                            <div class="text-[10px] text-slate-400">Tap the heart in real-time to banish hazards!</div>
+                            <div class="text-xs font-bold text-white">Live Evil Hearts</div>
+                            <div class="text-[10px] text-slate-400">Tap floating hearts directly on canvas to dispel!</div>
                         </div>
                     </div>
                 </div>
 
                 <button onclick="startArcadeJourney()" class="w-full max-w-[280px] py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm shadow-lg hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-2">
-                    <span>Start Arcade</span>
+                    <span>Start Quest</span>
                     <i class="fa-solid fa-play text-xs"></i>
                 </button>
             </div>
@@ -238,7 +242,7 @@
                     </div>
                     <h1 class="text-2xl font-extrabold text-white mb-1">Arcade Master!</h1>
                     <p class="text-xs text-slate-400 max-w-[260px] mb-6">
-                        You conquered all 6 games and neutralized every Evil Heart!
+                        You conquered all 5 stages and banished every Evil Heart!
                     </p>
 
                     <button onclick="showGrandTrophyModal()" class="w-full max-w-[280px] p-4 rounded-2xl bg-gradient-to-r from-amber-500 to-emerald-500 text-slate-950 font-black text-sm shadow-xl mb-3 flex items-center justify-between active:scale-95 transition">
@@ -278,9 +282,9 @@
                     👑
                 </div>
                 <h3 class="text-lg font-black text-white">Ultimate Champion</h3>
-                <p class="text-xs text-amber-400 font-semibold mb-3">6/6 Stages Mastered</p>
+                <p class="text-xs text-amber-400 font-semibold mb-3">5/5 Stages Mastered</p>
                 <div class="bg-white/5 p-3 rounded-xl text-left text-[11px] text-slate-300 mb-4 border border-white/5 leading-relaxed">
-                    Proven fast reflexes, sharp timing, and skilled play under live heart hazards!
+                    Proven fast reflexes, swift timing, and master precision under live heart hazards!
                 </div>
                 <button onclick="triggerConfetti(); closeGrandTrophyModal();" class="w-full py-2.5 rounded-xl bg-amber-400 text-slate-950 font-black text-xs shadow-lg">
                     🎉 Celebrate Victory!
@@ -381,12 +385,7 @@
             {
                 game: "Flappy Bird",
                 left: { img: "🥇", title: "Golden Flapper", desc: "Winged agility badge" },
-                right: { img: "🚀", title: "Rocket Thruster", desc: "Anti-gravity boost tech" }
-            },
-            {
-                game: "2048",
-                left: { img: "🔢", title: "Fusion Core", desc: "Doubles merge efficiency" },
-                right: { img: "🧠", title: "Quantum Matrix", desc: "Predicts tile spawns" }
+                right: { img: "🚀", title: "Rocket Thruster", desc: "Snappy jump tech" }
             },
             {
                 game: "Tetris",
@@ -502,7 +501,7 @@
                 tiltSelectionLocked = false;
 
                 currentGameIndex++;
-                if (currentGameIndex < 6) {
+                if (currentGameIndex < 5) {
                     loadGame(currentGameIndex);
                 } else {
                     showFinaleScreen();
@@ -521,10 +520,10 @@
         }
 
         function updateProgressBar() {
-            const stepNames = ["Flappy Bird", "2048", "Tetris", "Pac-Man", "Breakout", "Chrome Dino Chaos"];
-            document.getElementById('game-step-title').innerText = `STAGE ${currentGameIndex + 1}/6`;
+            const stepNames = ["Flappy Bird", "Tetris", "Pac-Man", "Breakout", "Chrome Dino Chaos"];
+            document.getElementById('game-step-title').innerText = `STAGE ${currentGameIndex + 1}/5`;
             document.getElementById('game-step-name').innerText = stepNames[currentGameIndex];
-            const pct = ((currentGameIndex + 1) / 6) * 100;
+            const pct = ((currentGameIndex + 1) / 5) * 100;
             document.getElementById('progress-bar-fill').style.width = `${pct}%`;
         }
 
@@ -536,11 +535,10 @@
 
             switch(index) {
                 case 0: renderGame1_FlappyBird(); break;
-                case 1: renderGame2_2048(); break;
-                case 2: renderGame3_Tetris(); break;
-                case 3: renderGame4_Pacman(); break;
-                case 4: renderGame5_Breakout(); break;
-                case 5: renderGame6_ChromeDinoChaos(); break;
+                case 1: renderGame2_Tetris(); break;
+                case 2: renderGame3_Pacman(); break;
+                case 3: renderGame4_Breakout(); break;
+                case 4: renderGame5_ChromeDinoChaos(); break;
             }
         }
 
@@ -622,7 +620,7 @@
             }
         }
 
-        // GAME 1: FLAPPY BIRD REPLICA
+        // GAME 1: FLAPPY BIRD (Fast, 10 Exits Target)
         function renderGame1_FlappyBird() {
             clearActiveGame();
 
@@ -632,7 +630,7 @@
                     <div class="w-full flex items-center justify-between px-2">
                         <div>
                             <h2 class="text-xs font-pixel text-yellow-400">FLAPPY BIRD</h2>
-                            <p class="text-[9px] text-slate-300">Tap bird to jump | Tap 🖤 to dispel!</p>
+                            <p class="text-[9px] text-slate-300">Tap to Flap | Tap 🖤 to Dispel!</p>
                         </div>
                         <button id="flappy-restart-btn" class="px-3 py-1 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
                             <i class="fa-solid fa-rotate-right text-[9px]"></i>
@@ -643,11 +641,11 @@
                     <div class="relative w-full max-w-[290px] h-[380px] bg-cyan-300 rounded-2xl overflow-hidden border-2 border-slate-700 shadow-2xl">
                         <canvas id="flappy-canvas" width="290" height="380" class="w-full h-full"></canvas>
                         <div class="absolute top-2 left-1/2 -translate-x-1/2 bg-slate-900/80 px-3 py-0.5 rounded-full border border-white/20 text-white font-pixel text-[10px]">
-                            SCORE: <span id="flappy-score" class="text-yellow-400">0</span>/4
+                            SCORE: <span id="flappy-score" class="text-yellow-400">0</span>/10
                         </div>
                     </div>
 
-                    <div class="text-[10px] text-slate-400 font-medium">Tap canvas to Flap | Tap Evil Heart to banish!</div>
+                    <div class="text-[10px] text-slate-400 font-medium">Fast action! Clear 10 gaps to win!</div>
                 </div>
             `;
 
@@ -655,7 +653,9 @@
 
             const canvas = document.getElementById('flappy-canvas');
             const ctx = canvas.getContext('2d');
-            let birdY = 180, velocity = 0, gravity = 0.22, jump = -4.8;
+            
+            // Snappy physics settings
+            let birdY = 180, velocity = 0, gravity = 0.42, jump = -6.8;
             let pipes = [], score = 0, frame = 0;
             let isGameOver = false;
 
@@ -664,7 +664,7 @@
                 x: -30,
                 y: 180,
                 radius: 16,
-                banishedTimer: 0
+                timer: 0
             };
 
             function handleCanvasTap(e) {
@@ -675,11 +675,11 @@
 
                 if (heart.active) {
                     const dist = Math.hypot(clickX - heart.x, clickY - heart.y);
-                    if (dist < heart.radius + 16) {
+                    if (dist < heart.radius + 18) {
                         heart.active = false;
-                        heart.banishedTimer = 300;
+                        heart.timer = 0;
                         playSound('score');
-                        return;
+                        return; // Dispel heart without jump interrupt if tapped directly
                     }
                 }
 
@@ -695,16 +695,25 @@
                 velocity += gravity;
                 birdY += velocity;
 
-                if (heart.banishedTimer > 0) {
-                    heart.banishedTimer--;
-                } else if (score >= 1 && !heart.active && frame % 160 === 0) {
+                // Evil Heart Spawn every ~4 seconds (frame % 200)
+                if (score >= 1 && !heart.active && frame % 180 === 0) {
                     heart.active = true;
-                    heart.x = -20;
-                    heart.y = birdY;
+                    heart.x = canvas.width + 20;
+                    heart.y = birdY + (Math.random() * 60 - 30);
+                    heart.timer = 150; // 2.5s timer
                 }
 
-                if (frame % 110 === 0) {
-                    const gap = 135;
+                if (heart.active) {
+                    heart.x -= 1.8;
+                    heart.timer--;
+                    if (heart.timer <= 0 || heart.x < -20) {
+                        heart.active = false;
+                    }
+                }
+
+                // Pipe Generation (Snappy speed)
+                if (frame % 75 === 0) {
+                    const gap = 110;
                     const topH = Math.floor(Math.random() * (canvas.height - gap - 120)) + 40;
                     pipes.push({ x: canvas.width, topH, gap, passed: false });
                 }
@@ -712,9 +721,10 @@
                 ctx.fillStyle = '#70c5ce';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+                // Pipes logic
                 for (let i = pipes.length - 1; i >= 0; i--) {
                     let p = pipes[i];
-                    p.x -= 1.6;
+                    p.x -= 2.8; // Snappy speed
 
                     ctx.fillStyle = '#73bf2e';
                     ctx.fillRect(p.x, 0, 44, p.topH);
@@ -727,19 +737,21 @@
                     ctx.fillStyle = '#558022';
                     ctx.fillRect(p.x - 2, botY, 48, 14);
 
+                    // Score increment
                     if (!p.passed && p.x + 44 < 60) {
                         p.passed = true;
                         score++;
                         playSound('score');
                         const scoreEl = document.getElementById('flappy-score');
                         if (scoreEl) scoreEl.innerText = score;
-                        if (score >= 4) {
+                        if (score >= 10) { // 10 Exits Target
                             isGameOver = true;
                             onGameWin();
                             return;
                         }
                     }
 
+                    // Collision
                     if (
                         (60 + 10 > p.x && 60 - 10 < p.x + 44) &&
                         (birdY - 8 < p.topH || birdY + 8 > p.topH + p.gap)
@@ -753,15 +765,14 @@
                     if (p.x < -50) pipes.splice(i, 1);
                 }
 
+                // Ground
                 ctx.fillStyle = '#ddd894';
                 ctx.fillRect(0, canvas.height - 35, canvas.width, 35);
                 ctx.fillStyle = '#73bf2e';
                 ctx.fillRect(0, canvas.height - 35, canvas.width, 6);
 
+                // Render Live Evil Heart
                 if (heart.active) {
-                    heart.x += (60 - heart.x) * 0.025;
-                    heart.y += (birdY - heart.y) * 0.04;
-
                     ctx.font = '22px serif';
                     ctx.fillText('🖤', heart.x - 11, heart.y + 8);
 
@@ -773,6 +784,7 @@
                     }
                 }
 
+                // Render Bird
                 ctx.save();
                 ctx.translate(60, birdY);
                 ctx.rotate(Math.min(Math.PI / 4, Math.max(-Math.PI / 4, velocity * 0.08)));
@@ -811,155 +823,8 @@
             activeAnimationFrame = requestAnimationFrame(loop);
         }
 
-        // GAME 2: 2048 PUZZLE
-        function renderGame2_2048() {
-            clearActiveGame();
-
-            const container = document.getElementById('game-screen');
-            container.innerHTML = `
-                <div class="w-full h-full flex flex-col items-center justify-between py-1 select-none">
-                    <div class="w-full flex items-center justify-between px-2">
-                        <div>
-                            <h2 class="text-xs font-bold text-amber-400">2048 PUZZLE</h2>
-                            <p class="text-[9px] text-slate-300">Merge to 64 | Tap 🖤 tiles to clear!</p>
-                        </div>
-                        <button id="g2048-restart-btn" class="px-3 py-1 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
-                            <i class="fa-solid fa-rotate-right text-[9px]"></i>
-                            <span>Restart</span>
-                        </button>
-                    </div>
-
-                    <div class="w-[280px] h-[280px] bg-amber-950/60 rounded-2xl p-2 grid grid-cols-4 gap-2 border-2 border-amber-700/50 shadow-2xl relative" id="grid-2048">
-                    </div>
-
-                    <div class="grid grid-cols-3 gap-1.5 w-[160px]">
-                        <div></div>
-                        <button onclick="move2048('up')" class="py-2 rounded-xl bg-slate-800 text-amber-400 font-bold border border-white/10 active:scale-90">▲</button>
-                        <div></div>
-                        <button onclick="move2048('left')" class="py-2 rounded-xl bg-slate-800 text-amber-400 font-bold border border-white/10 active:scale-90">◀</button>
-                        <button onclick="move2048('down')" class="py-2 rounded-xl bg-slate-800 text-amber-400 font-bold border border-white/10 active:scale-90">▼</button>
-                        <button onclick="move2048('right')" class="py-2 rounded-xl bg-slate-800 text-amber-400 font-bold border border-white/10 active:scale-90">▶</button>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('g2048-restart-btn').onclick = () => renderGame2_2048();
-
-            let board = Array(4).fill(null).map(() => Array(4).fill(0));
-            let moveCount = 0;
-
-            function spawnTile() {
-                let empty = [];
-                for (let r = 0; r < 4; r++) {
-                    for (let c = 0; c < 4; c++) {
-                        if (board[r][c] === 0) empty.push({ r, c });
-                    }
-                }
-                if (empty.length > 0) {
-                    let spot = empty[Math.floor(Math.random() * empty.length)];
-                    if (moveCount > 0 && moveCount % 5 === 0 && !board.some(row => row.includes('HEART'))) {
-                        board[spot.r][spot.c] = 'HEART';
-                    } else {
-                        board[spot.r][spot.c] = Math.random() < 0.8 ? 2 : 4;
-                    }
-                }
-            }
-
-            const tileColors = {
-                0: 'bg-amber-950/40 text-transparent',
-                2: 'bg-amber-100 text-slate-800 font-bold text-base',
-                4: 'bg-amber-200 text-slate-800 font-bold text-base',
-                8: 'bg-orange-400 text-white font-bold text-base',
-                16: 'bg-orange-500 text-white font-bold text-base',
-                32: 'bg-rose-500 text-white font-bold text-base',
-                64: 'bg-yellow-400 text-slate-900 font-extrabold text-lg shadow-lg shadow-yellow-500/30'
-            };
-
-            function draw2048() {
-                const gridEl = document.getElementById('grid-2048');
-                if (!gridEl) return;
-                gridEl.innerHTML = '';
-
-                for (let r = 0; r < 4; r++) {
-                    for (let c = 0; c < 4; c++) {
-                        const val = board[r][c];
-                        const tile = document.createElement('div');
-                        
-                        if (val === 'HEART') {
-                            tile.className = 'rounded-xl flex items-center justify-center bg-red-900 border-2 border-red-500 text-xl cursor-pointer animate-pulse';
-                            tile.innerText = '🖤';
-                            tile.onclick = () => {
-                                playSound('score');
-                                board[r][c] = 0;
-                                draw2048();
-                            };
-                        } else {
-                            tile.className = `rounded-xl flex items-center justify-center transition-all ${tileColors[val] || 'bg-yellow-400 text-slate-900 font-bold text-base'}`;
-                            tile.innerText = val > 0 ? val : '';
-                        }
-                        
-                        gridEl.appendChild(tile);
-
-                        if (typeof val === 'number' && val >= 64) {
-                            setTimeout(() => onGameWin(), 200);
-                        }
-                    }
-                }
-            }
-
-            window.move2048 = function(dir) {
-                playSound('tap');
-                let moved = false;
-                moveCount++;
-
-                function slide(row) {
-                    let arr = row.filter(val => val !== 0);
-                    for (let i = 0; i < arr.length - 1; i++) {
-                        if (typeof arr[i] === 'number' && arr[i] === arr[i + 1]) {
-                            arr[i] *= 2;
-                            playSound('score');
-                            arr[i + 1] = 0;
-                        }
-                    }
-                    arr = arr.filter(val => val !== 0);
-                    while (arr.length < 4) arr.push(0);
-                    return arr;
-                }
-
-                for (let i = 0; i < 4; i++) {
-                    let row;
-                    if (dir === 'left' || dir === 'right') {
-                        row = board[i].slice();
-                        if (dir === 'right') row.reverse();
-                        let newRow = slide(row);
-                        if (dir === 'right') newRow.reverse();
-                        if (JSON.stringify(board[i]) !== JSON.stringify(newRow)) moved = true;
-                        board[i] = newRow;
-                    } else {
-                        row = [board[0][i], board[1][i], board[2][i], board[3][i]];
-                        if (dir === 'down') row.reverse();
-                        let newRow = slide(row);
-                        if (dir === 'down') newRow.reverse();
-                        for (let r = 0; r < 4; r++) {
-                            if (board[r][i] !== newRow[r]) moved = true;
-                            board[r][i] = newRow[r];
-                        }
-                    }
-                }
-
-                if (moved) {
-                    spawnTile();
-                    draw2048();
-                }
-            };
-
-            spawnTile();
-            spawnTile();
-            draw2048();
-        }
-
-        // GAME 3: TETRIS REPLICA
-        function renderGame3_Tetris() {
+        // GAME 2: TETRIS (Clear 3 Lines)
+        function renderGame2_Tetris() {
             clearActiveGame();
 
             const container = document.getElementById('game-screen');
@@ -968,7 +833,7 @@
                     <div class="w-full flex items-center justify-between px-2">
                         <div>
                             <h2 class="text-xs font-pixel text-cyan-400">TETRIS</h2>
-                            <p class="text-[9px] text-slate-300">Clear 1 Line | Tap 🖤 block to clear!</p>
+                            <p class="text-[9px] text-slate-300">Clear 3 Lines | Tap 🖤 to vaporize!</p>
                         </div>
                         <button id="tetris-restart-btn" class="px-3 py-1 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
                             <i class="fa-solid fa-rotate-right text-[9px]"></i>
@@ -984,7 +849,7 @@
                         <div class="flex flex-col space-y-2 text-xs">
                             <div class="ios-glass p-2 rounded-xl text-center">
                                 <div class="text-[8px] text-slate-400">LINES</div>
-                                <div id="tetris-lines" class="font-pixel text-yellow-400 text-xs">0/1</div>
+                                <div id="tetris-lines" class="font-pixel text-yellow-400 text-xs">0/3</div>
                             </div>
                         </div>
                     </div>
@@ -998,7 +863,7 @@
                 </div>
             `;
 
-            document.getElementById('tetris-restart-btn').onclick = () => renderGame3_Tetris();
+            document.getElementById('tetris-restart-btn').onclick = () => renderGame2_Tetris();
 
             const canvas = document.getElementById('tetris-canvas');
             const ctx = canvas.getContext('2d');
@@ -1012,7 +877,7 @@
             const colors = ['#06b6d4', '#a855f7', '#eab308', '#ef4444'];
 
             function spawnPiece() {
-                if (Math.random() < 0.25) {
+                if (Math.random() < 0.22) {
                     return { shape: [[1]], color: '#ef4444', isHeart: true, x: 4, y: 0 };
                 }
                 const idx = Math.floor(Math.random() * shapes.length);
@@ -1058,7 +923,7 @@
                     row.forEach((val, c) => {
                         if (val) {
                             if (current.y + r < 0) {
-                                renderGame3_Tetris();
+                                renderGame2_Tetris();
                                 return;
                             }
                             board[current.y + r][current.x + c] = current.color;
@@ -1073,8 +938,8 @@
                         linesCleared++;
                         playSound('score');
                         const linesEl = document.getElementById('tetris-lines');
-                        if (linesEl) linesEl.innerText = `${linesCleared}/1`;
-                        if (linesCleared >= 1) {
+                        if (linesEl) linesEl.innerText = `${linesCleared}/3`;
+                        if (linesCleared >= 3) {
                             onGameWin();
                             return;
                         }
@@ -1130,7 +995,7 @@
 
             function loop() {
                 dropCounter++;
-                if (dropCounter > 35) {
+                if (dropCounter > 28) {
                     dropCounter = 0;
                     if (validMove(current, 0, 1)) {
                         current.y++;
@@ -1145,8 +1010,8 @@
             activeAnimationFrame = requestAnimationFrame(loop);
         }
 
-        // GAME 4: PAC-MAN MINI
-        function renderGame4_Pacman() {
+        // GAME 3: PAC-MAN MINI (Eat 15 Dots Target)
+        function renderGame3_Pacman() {
             clearActiveGame();
 
             const container = document.getElementById('game-screen');
@@ -1155,7 +1020,7 @@
                     <div class="w-full flex items-center justify-between px-2">
                         <div>
                             <h2 class="text-xs font-pixel text-yellow-400">PAC-MAN MINI</h2>
-                            <p class="text-[9px] text-slate-300">Eat 8 Dots | Tap 🖤 chaser to stun!</p>
+                            <p class="text-[9px] text-slate-300">Eat 15 Dots | Tap 🖤 to stun!</p>
                         </div>
                         <button id="pac-restart-btn" class="px-3 py-1 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
                             <i class="fa-solid fa-rotate-right text-[9px]"></i>
@@ -1166,7 +1031,7 @@
                     <div class="relative w-[270px] h-[290px] bg-black rounded-xl border-2 border-blue-600 shadow-2xl p-1">
                         <canvas id="pacman-canvas" width="270" height="290" class="w-full h-full"></canvas>
                         <div class="absolute top-2 left-2 text-[9px] font-pixel text-white">
-                            DOTS: <span id="pac-dots" class="text-yellow-400">0</span>/8
+                            DOTS: <span id="pac-dots" class="text-yellow-400">0</span>/15
                         </div>
                     </div>
 
@@ -1181,7 +1046,7 @@
                 </div>
             `;
 
-            document.getElementById('pac-restart-btn').onclick = () => renderGame4_Pacman();
+            document.getElementById('pac-restart-btn').onclick = () => renderGame3_Pacman();
 
             const canvas = document.getElementById('pacman-canvas');
             const ctx = canvas.getContext('2d');
@@ -1200,24 +1065,24 @@
                 const clickY = e.clientY - rect.top;
 
                 if (Math.hypot(clickX - heartGhost.x, clickY - heartGhost.y) < 22) {
-                    heartGhost.stunnedTimer = 120;
+                    heartGhost.stunnedTimer = 140;
                     playSound('score');
                 }
             });
 
             let dots = [];
-            for (let x = 35; x < 240; x += 40) {
-                for (let y = 45; y < 250; y += 40) {
+            for (let x = 30; x < 250; x += 32) {
+                for (let y = 40; y < 260; y += 38) {
                     dots.push({ x, y, active: true });
                 }
             }
 
             window.movePac = function(dir) {
                 playSound('tap');
-                if (dir === 'up') { dx = 0; dy = -2.2; }
-                if (dir === 'down') { dx = 0; dy = 2.2; }
-                if (dir === 'left') { dx = -2.2; dy = 0; }
-                if (dir === 'right') { dx = 2.2; dy = 0; }
+                if (dir === 'up') { dx = 0; dy = -2.4; }
+                if (dir === 'down') { dx = 0; dy = 2.4; }
+                if (dir === 'left') { dx = -2.4; dy = 0; }
+                if (dir === 'right') { dx = 2.4; dy = 0; }
             };
 
             function loop() {
@@ -1239,8 +1104,8 @@
                     ctx.font = '20px serif';
                     ctx.fillText('💫', heartGhost.x - 10, heartGhost.y + 7);
                 } else {
-                    heartGhost.x += (pacX - heartGhost.x) * 0.015;
-                    heartGhost.y += (pacY - heartGhost.y) * 0.015;
+                    heartGhost.x += (pacX - heartGhost.x) * 0.016;
+                    heartGhost.y += (pacY - heartGhost.y) * 0.016;
 
                     ctx.font = '20px serif';
                     ctx.fillText('🖤', heartGhost.x - 10, heartGhost.y + 7);
@@ -1248,7 +1113,7 @@
                     if (Math.hypot(pacX - heartGhost.x, pacY - heartGhost.y) < 14) {
                         isGameOver = true;
                         playSound('fail');
-                        setTimeout(() => renderGame4_Pacman(), 200);
+                        setTimeout(() => renderGame3_Pacman(), 200);
                         return;
                     }
                 }
@@ -1266,7 +1131,7 @@
                             playSound('score');
                             const dotsEl = document.getElementById('pac-dots');
                             if (dotsEl) dotsEl.innerText = dotsEaten;
-                            if (dotsEaten >= 8) {
+                            if (dotsEaten >= 15) { // 15 Dots Target
                                 isGameOver = true;
                                 onGameWin();
                                 return;
@@ -1287,8 +1152,8 @@
             activeAnimationFrame = requestAnimationFrame(loop);
         }
 
-        // GAME 5: BREAKOUT
-        function renderGame5_Breakout() {
+        // GAME 4: BREAKOUT (Clear 12 Bricks Target)
+        function renderGame4_Breakout() {
             clearActiveGame();
 
             const container = document.getElementById('game-screen');
@@ -1297,7 +1162,7 @@
                     <div class="w-full flex items-center justify-between px-2">
                         <div>
                             <h2 class="text-xs font-pixel text-rose-400">BREAKOUT</h2>
-                            <p class="text-[9px] text-slate-300">Clear 6 Bricks | Tap 🖤 to banish!</p>
+                            <p class="text-[9px] text-slate-300">Clear 12 Bricks | Tap 🖤 to banish!</p>
                         </div>
                         <button id="breakout-restart-btn" class="px-3 py-1 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
                             <i class="fa-solid fa-rotate-right text-[9px]"></i>
@@ -1308,7 +1173,7 @@
                     <div class="relative w-[280px] h-[330px] bg-slate-950 rounded-2xl border-2 border-slate-700 shadow-2xl overflow-hidden touch-none">
                         <canvas id="breakout-canvas" width="280" height="330" class="w-full h-full"></canvas>
                         <div class="absolute top-2 left-2 text-[9px] font-pixel text-white">
-                            BRICKS: <span id="brk-score" class="text-rose-400">0</span>/6
+                            BRICKS: <span id="brk-score" class="text-rose-400">0</span>/12
                         </div>
                     </div>
 
@@ -1316,13 +1181,13 @@
                 </div>
             `;
 
-            document.getElementById('breakout-restart-btn').onclick = () => renderGame5_Breakout();
+            document.getElementById('breakout-restart-btn').onclick = () => renderGame4_Breakout();
 
             const canvas = document.getElementById('breakout-canvas');
             const ctx = canvas.getContext('2d');
 
-            let paddleX = 90, paddleW = 90;
-            let ballX = 140, ballY = 220, dx = 2.2, dy = -2.2;
+            let paddleX = 90, paddleW = 85;
+            let ballX = 140, ballY = 220, dx = 2.4, dy = -2.4;
             let bricksCleared = 0;
             let isGameOver = false;
 
@@ -1340,9 +1205,9 @@
             });
 
             let bricks = [];
-            for (let r = 0; r < 2; r++) {
-                for (let c = 0; c < 5; c++) {
-                    bricks.push({ x: c * 52 + 10, y: r * 22 + 35, w: 46, h: 16, active: true });
+            for (let r = 0; r < 3; r++) {
+                for (let c = 0; c < 4; c++) {
+                    bricks.push({ x: c * 64 + 14, y: r * 22 + 35, w: 58, h: 16, active: true });
                 }
             }
 
@@ -1372,7 +1237,7 @@
                 if (ballY > canvas.height) {
                     isGameOver = true;
                     playSound('fail');
-                    setTimeout(() => renderGame5_Breakout(), 200);
+                    setTimeout(() => renderGame4_Breakout(), 200);
                     return;
                 }
 
@@ -1405,7 +1270,7 @@
                             playSound('score');
                             const brkEl = document.getElementById('brk-score');
                             if (brkEl) brkEl.innerText = bricksCleared;
-                            if (bricksCleared >= 6) {
+                            if (bricksCleared >= 12) { // 12 Bricks Target
                                 isGameOver = true;
                                 onGameWin();
                                 return;
@@ -1420,8 +1285,8 @@
             activeAnimationFrame = requestAnimationFrame(loop);
         }
 
-        // GAME 6: CHROME DINO CHAOS
-        function renderGame6_ChromeDinoChaos() {
+        // GAME 5: CHROME DINO CHAOS FINALE (Run 100m)
+        function renderGame5_ChromeDinoChaos() {
             clearActiveGame();
 
             const container = document.getElementById('game-screen');
@@ -1429,8 +1294,8 @@
                 <div class="w-full h-full flex flex-col items-center justify-between py-1 select-none">
                     <div class="w-full flex items-center justify-between px-2">
                         <div>
-                            <h2 class="text-xs font-pixel text-red-500 animate-pulse">CHROME DINO CHAOS</h2>
-                            <p class="text-[9px] text-slate-300">Run 100m | Tap 🖤 to banish!</p>
+                            <h2 class="text-xs font-pixel text-red-500 animate-pulse">DINO CHAOS FINALE</h2>
+                            <p class="text-[9px] text-slate-300">Run 100m | Tap 🖤 chaser to repel!</p>
                         </div>
                         <button id="dino-restart-btn" class="px-3 py-1 rounded-lg bg-slate-800 border border-white/10 text-white text-[10px] font-bold active:scale-90 transition flex items-center space-x-1">
                             <i class="fa-solid fa-rotate-right text-[9px]"></i>
@@ -1450,18 +1315,18 @@
                 </div>
             `;
 
-            document.getElementById('dino-restart-btn').onclick = () => renderGame6_ChromeDinoChaos();
+            document.getElementById('dino-restart-btn').onclick = () => renderGame5_ChromeDinoChaos();
 
             const canvas = document.getElementById('dino-canvas');
             const ctx = canvas.getContext('2d');
 
             let dinoY = 260, dinoVy = 0, gravity = 0.48, isJumping = false;
-            let distance = 0, speed = 3.0;
+            let distance = 0, speed = 3.2;
             let meteors = [], cacti = [];
             let slowTimer = 0;
             let isGameOver = false;
 
-            let liveHeart = { x: 180, y: 180, active: true };
+            let liveHeart = { x: -20, y: 250, active: true };
 
             canvas.addEventListener('pointerdown', (e) => {
                 if (isGameOver) return;
@@ -1470,7 +1335,7 @@
                 const clickY = e.clientY - rect.top;
 
                 if (liveHeart.active && Math.hypot(clickX - liveHeart.x, clickY - liveHeart.y) < 25) {
-                    liveHeart.active = false;
+                    liveHeart.x = -30; // Knock back chaser
                     playSound('score');
                     return;
                 }
@@ -1529,13 +1394,20 @@
                 ctx.stroke();
 
                 ctx.fillStyle = '#e2e8f0';
-                ctx.fillRect(40, dinoY - 22, 18, 22);
-                ctx.fillRect(50, dinoY - 30, 10, 10);
+                ctx.fillRect(60, dinoY - 22, 18, 22);
+                ctx.fillRect(70, dinoY - 30, 10, 10);
 
                 if (liveHeart.active) {
-                    liveHeart.x += Math.sin(Date.now() * 0.002) * 1.2;
+                    liveHeart.x += 0.45; // Slowly chases Dino
                     ctx.font = '22px serif';
-                    ctx.fillText('🖤', liveHeart.x - 11, liveHeart.y);
+                    ctx.fillText('🖤', liveHeart.x, liveHeart.y);
+
+                    if (Math.hypot(liveHeart.x - 60, liveHeart.y - dinoY) < 18) {
+                        isGameOver = true;
+                        playSound('fail');
+                        setTimeout(() => renderGame5_ChromeDinoChaos(), 200);
+                        return;
+                    }
                 }
 
                 for (let i = cacti.length - 1; i >= 0; i--) {
@@ -1544,7 +1416,7 @@
                     ctx.fillStyle = '#22c55e';
                     ctx.fillRect(c.x, 288 - c.h, c.w, c.h);
 
-                    if (c.x < 58 && c.x + c.w > 38 && dinoY >= 288 - c.h) {
+                    if (c.x < 78 && c.x + c.w > 58 && dinoY >= 288 - c.h) {
                         slowTimer = 40;
                     }
                     if (c.x < -20) cacti.splice(i, 1);
@@ -1557,11 +1429,11 @@
                     ctx.font = '18px serif';
                     ctx.fillText(m.isRed ? '☄️' : '💥', m.x, m.y);
 
-                    if (Math.hypot(m.x - 48, m.y - dinoY) < 18) {
+                    if (Math.hypot(m.x - 68, m.y - dinoY) < 18) {
                         if (m.isRed) {
                             isGameOver = true;
                             playSound('boom');
-                            setTimeout(() => renderGame6_ChromeDinoChaos(), 200);
+                            setTimeout(() => renderGame5_ChromeDinoChaos(), 200);
                             return;
                         } else {
                             slowTimer = 50;
